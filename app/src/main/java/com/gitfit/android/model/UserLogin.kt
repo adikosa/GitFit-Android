@@ -1,4 +1,4 @@
-package com.gitfit.android
+package com.gitfit.android.model
 
 data class UserLogin(
     var username: String,

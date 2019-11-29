@@ -1,11 +1,14 @@
-package com.gitfit.android
+package com.gitfit.android.api
 
+import com.gitfit.android.model.UserLogin
+import com.gitfit.android.model.UserRegister
+import com.gitfit.android.model.UserResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 
+interface GitFitApiService {
 
-interface JsonPlaceHolderApi {
     @POST("register/oauth/authorize")
     fun registerUser(@Body userRegister: UserRegister): Call<UserResponse>
 

@@ -2,14 +2,17 @@ package com.gitfit.android.repos
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.gitfit.android.api.GitFitApiService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import okhttp3.*
 import java.io.IOException
 
-class AuthRepository {
+class GitFitAPIRepository(val gitFitApiService: GitFitApiService) {
+
     val tokenLiveData = MutableLiveData<String>()
+
     fun getTokenFromUrl(url: String): LiveData<String?> {
         val okHttpClient = OkHttpClient()
         val request = Request.Builder()
