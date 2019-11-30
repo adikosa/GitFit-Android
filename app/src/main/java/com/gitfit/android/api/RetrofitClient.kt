@@ -4,7 +4,7 @@ import com.gitfit.android.AppConstants
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class GitFitServiceAPI {
+class RetrofitClient {
 
     fun getGitFitService() : GitFitApiService {
         val retrofit = Retrofit.Builder()

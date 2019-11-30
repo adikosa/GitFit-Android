@@ -1,40 +1,34 @@
 package com.gitfit.android.repos
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.gitfit.android.api.GitFitApiService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
-import okhttp3.*
-import java.io.IOException
+import com.gitfit.android.model.UserLogin
+import com.gitfit.android.model.UserRegister
+import com.gitfit.android.model.UserResponse
+import retrofit2.HttpException
 
-class GitFitAPIRepository(val gitFitApiService: GitFitApiService) {
+class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
 
-    val tokenLiveData = MutableLiveData<String>()
+    suspend fun getGithubToken(code: String) =
+        gitFitApiService.getGithubOauthToken(code, "randomState")
 
-    fun getTokenFromUrl(url: String): LiveData<String?> {
-        val okHttpClient = OkHttpClient()
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
-        okHttpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                CoroutineScope(Main).launch {
-                    tokenLiveData.value = null
-                }
-                e.printStackTrace()
+    suspend fun getUser(username: String): UserResponse? {
+        val user: UserResponse?
+        try {
+            user = gitFitApiService.getUser(username)
+        } catch (httpException: HttpException) {
+            val responseCode = httpException.code()
+            if (responseCode == 500) {
+                return null
+            } else {
+                throw httpException
             }
-
-            override fun onResponse(call: Call, response: Response) {
-                CoroutineScope(Main).launch {
-                    val token = response.body!!.string()
-                    tokenLiveData.value = token
-                }
-            }
-        })
-
-        return tokenLiveData
+        }
+        return user
     }
+
+    suspend fun logInUser(userLogin: UserLogin) =
+        gitFitApiService.loginUser(userLogin)
+
+    suspend fun registerUser(userRegister: UserRegister) =
+        gitFitApiService.registerUser(userRegister)
 }

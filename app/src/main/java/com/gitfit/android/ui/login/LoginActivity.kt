@@ -41,14 +41,17 @@ class LoginActivity : AppCompatActivity() {
         super.onNewIntent(intent)
 
         val code = intent?.data?.getQueryParameter("code")
-        loginViewModel.handleGithubCode(code)
+        code?.let {
+            loginViewModel.handleGithubCode(code)
+        }
     }
 
     private fun openCustomTabsIntent() {
         val builder = CustomTabsIntent.Builder()
         val customTabsIntent = builder.build()
-            customTabsIntent.launchUrl(
-                this, Uri.parse(AppConstants.GITHUB_CODE_URL))
+        customTabsIntent.launchUrl(
+            this, Uri.parse(AppConstants.GITHUB_CODE_URL)
+        )
     }
 
     private fun openHomeActivity() {

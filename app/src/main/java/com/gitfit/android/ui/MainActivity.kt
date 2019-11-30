@@ -11,7 +11,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        //todo if token in shared prefs -> check is valid - (if valid home else login)
+        // else -> go to login activity
         startActivityAndClearBackStack(LoginActivity::class)
     }
 }
