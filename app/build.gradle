@@ -83,7 +83,5 @@ dependencies {
 
     implementation 'androidx.browser:browser:1.0.0'
 
-    implementation 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
-
     implementation 'com.braintreepayments:browser-switch:0.2.0'
 }

@@ -1,19 +1,19 @@
 package com.gitfit.android.utils
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.widget.Toast
+import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import com.gitfit.android.ui.login.LoginActivity
-import kotlin.reflect.KClass
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 
-fun Activity.startActivityAndClearBackStack(activity: KClass<out Activity>) {
-    val intent = Intent(this, activity.java)
-    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-    startActivity(intent)
-    finish()
+fun NavController.navigateWithoutComingBack(@IdRes resIdDestination: Int, @IdRes resIdSource: Int) {
+    val navOptions = NavOptions.Builder()
+        .setPopUpTo(resIdSource, false)
+        .build()
+
+    this.navigate(resIdDestination, null, navOptions)
 }
 
 fun Context.showToast(text: String) {
