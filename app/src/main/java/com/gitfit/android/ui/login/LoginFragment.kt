@@ -8,32 +8,25 @@ import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.gitfit.android.AppConstants
 import com.gitfit.android.R
 import com.gitfit.android.databinding.FragmentLoginBinding
+import com.gitfit.android.ui.base.BaseFragment
 import com.gitfit.android.utils.navigateWithoutComingBack
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginFragment : Fragment() {
+class LoginFragment : BaseFragment(), LoginNavigator {
 
     private val loginViewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loginViewModel.setNavigator(this)
 
-        loginViewModel.openCustomTabsIntentEvent.observe(this, Observer {
-            openCustomTabsIntent()
-        })
-
-        loginViewModel.openHomeActivityEvent.observe(this, Observer {
-            openHomeFragment()
-        })
-
-        loginViewModel.openRegisterFragmentEvent.observe(this, Observer {
-            openRegisterFragment()
+        loginViewModel.mIsLoading.observe(this, Observer {
+            setLoading(it)
         })
     }
 
@@ -56,7 +49,7 @@ class LoginFragment : Fragment() {
         loginViewModel.handleGithubCode(code)
     }
 
-    private fun openCustomTabsIntent() {
+    override fun openCustomTabsIntent() {
         val builder = CustomTabsIntent.Builder()
         val customTabsIntent = builder.build()
         customTabsIntent.launchUrl(
@@ -64,11 +57,11 @@ class LoginFragment : Fragment() {
         )
     }
 
-    private fun openHomeFragment() {
-        findNavController().navigateWithoutComingBack(R.id.nav_graph_main, R.id.nav_graph_auth)
+    override fun navigateToHomeFragment() {
+        findNavController().navigateWithoutComingBack(R.id.nav_graph_auth, R.id.nav_graph_main)
     }
 
-    private fun openRegisterFragment() {
+    override fun navigateToRegisterFragment() {
         findNavController().navigate(
             R.id.navigation_register, bundleOf(
                 "username" to loginViewModel.githubTokenResponse!!.username,

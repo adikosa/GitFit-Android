@@ -15,19 +15,17 @@ import com.gitfit.android.utils.navigateWithoutComingBack
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class RegisterFragment : Fragment() {
+class RegisterFragment : Fragment(), RegisterNavigator {
 
     private val registerViewModel: RegisterViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        registerViewModel.setNavigator(this)
+
         registerViewModel.userRegister.username = arguments!!.getString("username")!!
         registerViewModel.userRegister.githubToken = arguments!!.getString("githubToken")!!
-
-        registerViewModel.openHomeActivityEvent.observe(this, Observer {
-            openHomeFragment()
-        })
     }
 
     override fun onCreateView(
@@ -40,14 +38,15 @@ class RegisterFragment : Fragment() {
                 inflater,
                 R.layout.fragment_register, container, false
             )
+
         binding.viewModel = registerViewModel
         binding.lifecycleOwner = this
+
         return binding.root
     }
 
-
-    private fun openHomeFragment() {
-        findNavController().navigateWithoutComingBack(R.id.nav_graph_main, R.id.nav_graph_auth)
+    override fun navigateToHomeFragment() {
+        findNavController().navigateWithoutComingBack(R.id.nav_graph_auth, R.id.nav_graph_main)
     }
 
 }

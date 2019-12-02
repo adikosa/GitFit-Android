@@ -1,5 +1,6 @@
 package com.gitfit.android.di
 
+import com.gitfit.android.PreferenceProvider
 import com.gitfit.android.api.RetrofitClient
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.login.LoginViewModel
@@ -13,8 +14,9 @@ val appModule = module {
     single { GitFitAPIRepository(get()) }
     single { RetrofitClient() }
     single { get<RetrofitClient>().getGitFitService() }
+    single { PreferenceProvider(androidApplication().applicationContext) }
 
     viewModel { HomeViewModel() }
-    viewModel { LoginViewModel(get(), androidApplication().applicationContext) }
-    viewModel { RegisterViewModel(get(), androidApplication().applicationContext) }
+    viewModel { LoginViewModel(get(), get()) }
+    viewModel { RegisterViewModel(get(), get()) }
 }

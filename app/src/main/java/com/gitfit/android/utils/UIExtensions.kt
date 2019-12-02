@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 
-fun NavController.navigateWithoutComingBack(@IdRes resIdDestination: Int, @IdRes resIdSource: Int) {
+fun NavController.navigateWithoutComingBack(@IdRes resIdSource: Int, @IdRes resIdDestination: Int) {
     val navOptions = NavOptions.Builder()
         .setPopUpTo(resIdSource, false)
         .build()

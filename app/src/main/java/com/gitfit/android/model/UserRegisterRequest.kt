@@ -1,6 +1,6 @@
 package com.gitfit.android.model
 
-data class UserRegister(
+data class UserRegisterRequest(
     var username: String,
     var githubToken: String,
     var firstName: String,
