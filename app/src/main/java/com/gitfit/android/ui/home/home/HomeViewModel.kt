@@ -1,4 +1,4 @@
-package com.gitfit.android.ui.ui.home
+package com.gitfit.android.ui.home.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

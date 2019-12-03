@@ -40,6 +40,7 @@ class LoginViewModel(
             if (userResponse == null) {
                 withContext(Dispatchers.Main) {
                     navigator()!!.navigateToRegisterFragment()
+                    setLoading(false)
                 }
 
             } else {
