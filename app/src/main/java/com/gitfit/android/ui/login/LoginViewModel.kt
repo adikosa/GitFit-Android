@@ -1,7 +1,5 @@
 package com.gitfit.android.ui.login
 
-import androidx.databinding.BaseObservable
-import androidx.lifecycle.MutableLiveData
 import com.gitfit.android.PreferenceProvider
 import com.gitfit.android.model.GithubTokenResponse
 import com.gitfit.android.model.User

@@ -16,10 +16,6 @@ fun Any.error(message: String) {
     KoinApplication.logger.error(message)
 }
 
-fun Any.warn(message: String) {
-    KoinApplication.logger.warn(message)
-}
-
 fun Any.logd(message: String) {
     if (BuildConfig.DEBUG)
         Log.d(className() + "." + methodName(), message)

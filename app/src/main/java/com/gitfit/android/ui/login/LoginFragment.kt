@@ -58,7 +58,7 @@ class LoginFragment : BaseFragment(), LoginNavigator {
     }
 
     override fun navigateToHomeFragment() {
-        findNavController().navigateWithoutComingBack(R.id.nav_graph_auth, R.id.nav_graph_main)
+        findNavController().navigateWithoutComingBack(R.id.nav_graph_main)
     }
 
     override fun navigateToRegisterFragment() {

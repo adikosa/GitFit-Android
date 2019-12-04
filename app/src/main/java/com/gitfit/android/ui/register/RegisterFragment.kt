@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.gitfit.android.R
 import com.gitfit.android.databinding.FragmentRegisterBinding
@@ -46,7 +45,7 @@ class RegisterFragment : Fragment(), RegisterNavigator {
     }
 
     override fun navigateToHomeFragment() {
-        findNavController().navigateWithoutComingBack(R.id.nav_graph_auth, R.id.nav_graph_main)
+        findNavController().navigateWithoutComingBack(R.id.nav_graph_main)
     }
 
 }

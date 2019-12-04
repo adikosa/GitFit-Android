@@ -17,7 +17,10 @@ import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.login.LoginFragment
 import com.gitfit.android.utils.navigateWithoutComingBack
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 if (gitFitAPIRepository.isTokenValid(user.username!!, user.token!!)) {
                     withContext(Dispatchers.Main) {
-                        navController.navigateWithoutComingBack(R.id.nav_graph_auth, R.id.nav_graph_main)
+                        navController.navigateWithoutComingBack(R.id.nav_graph_main)
                     }
                 } else {
                     preferences.removeUser()
