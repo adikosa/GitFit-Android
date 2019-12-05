@@ -7,4 +7,7 @@
     <string name="first_name_hint">Enter your first name</string>
     <string name="last_name_hint">Enter your last name</string>
     <string name="register_button_text">Register</string>
+    <string name="activity_goals_title">Activity goals</string>
+    <string name="lines_of_code">Lines of code</string>
+    <string name="cups_of_coffee">Cups of coffee</string>
 </resources>
