@@ -1,4 +1,4 @@
-package com.gitfit.android.api
+package com.gitfit.android.data.remote
 
 import com.gitfit.android.AppConstants
 import retrofit2.Retrofit

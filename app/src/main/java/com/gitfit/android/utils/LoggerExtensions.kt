@@ -1,7 +1,5 @@
 package com.gitfit.android.utils
 
-import android.util.Log
-import com.gitfit.android.BuildConfig
 import org.koin.core.KoinApplication
 
 fun Any.debug(message: String) {
@@ -14,19 +12,6 @@ fun Any.info(message: String) {
 
 fun Any.error(message: String) {
     KoinApplication.logger.error(message)
-}
-
-fun Any.logd(message: String) {
-    if (BuildConfig.DEBUG)
-        Log.d(className() + "." + methodName(), message)
-}
-
-fun Any.logi(message: String) {
-    Log.i(className() + "." + methodName(), message)
-}
-
-fun Any.loge(message: String) {
-    Log.e(className() + "." + methodName(), message)
 }
 
 fun Any.className(): String {

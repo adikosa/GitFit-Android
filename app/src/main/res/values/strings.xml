@@ -10,4 +10,6 @@
     <string name="activity_goals_title">Activity goals</string>
     <string name="lines_of_code">Lines of code</string>
     <string name="cups_of_coffee">Cups of coffee</string>
+    <string name="lines_of_code_goal_hint">Enter your daily lines of code goal</string>
+    <string name="cups_of_coffee_goal_hint">Enter your daily cups of coffee goal</string>
 </resources>

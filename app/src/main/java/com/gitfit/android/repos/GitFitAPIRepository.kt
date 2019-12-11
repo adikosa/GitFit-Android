@@ -1,9 +1,11 @@
 package com.gitfit.android.repos
 
-import com.gitfit.android.api.GitFitApiService
-import com.gitfit.android.model.UserLoginRequest
-import com.gitfit.android.model.UserRegisterRequest
-import com.gitfit.android.model.UserResponse
+import com.gitfit.android.data.remote.GitFitApiService
+import com.gitfit.android.data.local.prefs.User
+import com.gitfit.android.data.remote.request.PatchUserDtoRequest
+import com.gitfit.android.data.remote.request.UserLoginRequest
+import com.gitfit.android.data.remote.request.UserRegisterRequest
+import com.gitfit.android.data.remote.response.UserResponse
 import retrofit2.HttpException
 
 class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
@@ -28,6 +30,12 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
         }
     }
 
+    suspend fun updateUser(username: String, patchUserDtoRequest: PatchUserDtoRequest, token: String) {
+        gitFitApiService.updateUser(
+            username, AUTH_HEADER_PREFIX + token, patchUserDtoRequest
+        )
+    }
+
     suspend fun isTokenValid(username: String, token: String): Boolean {
         return try {
             gitFitApiService.getUserWithAuthorization(username,
@@ -43,4 +51,6 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
 
     suspend fun registerUser(userRegisterRequest: UserRegisterRequest) =
         gitFitApiService.registerUser(userRegisterRequest)
+
+
 }

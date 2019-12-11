@@ -23,8 +23,8 @@ class RegisterFragment : Fragment(), RegisterNavigator {
 
         registerViewModel.setNavigator(this)
 
-        registerViewModel.userRegister.username = arguments!!.getString("username")!!
-        registerViewModel.userRegister.githubToken = arguments!!.getString("githubToken")!!
+        registerViewModel.user.username = arguments!!.getString("username")!!
+        registerViewModel.user.token = arguments!!.getString("githubToken")!!
     }
 
     override fun onCreateView(
