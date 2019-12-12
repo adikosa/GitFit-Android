@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
 @Entity(tableName = "activities")
-class Activity(
+data class Activity(
     @PrimaryKey val id: Long,
     val user: String,
     val type: String,

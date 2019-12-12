@@ -1,7 +1,6 @@
 package com.gitfit.android.ui.home.profile
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.data.local.prefs.User
@@ -25,7 +24,7 @@ class ProfileViewModel(
     }
 
     fun onProfileDetailsLayoutClick() {
-        navigator()!!.openAlertDialog()
+        navigator()!!.openProfileAlertDialog()
     }
 
     fun update() {
@@ -48,5 +47,13 @@ class ProfileViewModel(
         }
 
         navigator()!!.navigateToLoginFragment()
+    }
+
+    fun onActionInfoMenuClick() {
+        navigator()!!.openInfoAlertDialog()
+    }
+
+    fun onActionSettingsMenuClick() {
+        navigator()!!.openSettings()
     }
 }

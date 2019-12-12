@@ -1,6 +1,8 @@
 package com.gitfit.android.ui.home.profile
 
 interface ProfileNavigator {
-    fun openAlertDialog()
+    fun openProfileAlertDialog()
+    fun openInfoAlertDialog()
+    fun openSettings()
     fun navigateToLoginFragment()
 }

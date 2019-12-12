@@ -16,7 +16,6 @@ import org.koin.dsl.module
 
 val appModule = module {
 
-
     single { RetrofitClient() }
     single { get<RetrofitClient>().getGitFitService() }
 
@@ -27,9 +26,9 @@ val appModule = module {
     single { GitFitAPIRepository(get()) }
     single { ActivityRepository(get()) }
 
-    viewModel { HomeViewModel() }
     viewModel { LoginViewModel(get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
 
+    viewModel { HomeViewModel() }
     viewModel { ProfileViewModel(get(), get(), get()) }
 }

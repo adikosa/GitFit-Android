@@ -1,9 +1,7 @@
 package com.gitfit.android.ui.home.profile
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import androidx.core.widget.addTextChangedListener
@@ -12,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.gitfit.android.R
 import com.gitfit.android.databinding.FragmentProfileBinding
 import com.gitfit.android.ui.base.BaseFragment
+import com.gitfit.android.utils.debug
 import com.gitfit.android.utils.navigateWithoutComingBack
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -19,7 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class ProfileFragment : BaseFragment(), ProfileNavigator {
 
     private val profileViewModel: ProfileViewModel by viewModel()
-    lateinit var alertDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,11 +26,6 @@ class ProfileFragment : BaseFragment(), ProfileNavigator {
         profileViewModel.mIsLoading.observe(this, Observer {
             setLoading(it)
         })
-
-        alertDialog = AlertDialog.Builder(context!!)
-            .setItems(arrayOf("Sign Out")) { _, _ ->
-                profileViewModel.signOut()
-            }.create()
     }
 
     override fun onCreateView(
@@ -55,15 +48,53 @@ class ProfileFragment : BaseFragment(), ProfileNavigator {
 
         mLinesOfCodeEditText.addTextChangedListener { profileViewModel.update() }
         mCupsOfCoffeeEditText.addTextChangedListener { profileViewModel.update() }
+
+        inflateMenu()
     }
 
-    override fun openAlertDialog() {
-        val alertDialog = AlertDialog.Builder(context!!)
+    private fun inflateMenu() {
+        toolbar.inflateMenu(R.menu.profile_menu)
+        toolbar.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.action_info -> profileViewModel.onActionInfoMenuClick()
+                R.id.action_settings -> profileViewModel.onActionSettingsMenuClick()
+                else -> debug("Wrong menu option selected")
+            }
+
+            true
+        }
+    }
+
+    override fun openProfileAlertDialog() {
+        val profileAlertDialog = AlertDialog.Builder(context!!)
             .setItems(arrayOf("Sign Out")) { _, _ ->
                 profileViewModel.signOut()
             }.create()
 
-        alertDialog.show()
+        profileAlertDialog.show()
+    }
+
+    override fun openInfoAlertDialog() {
+        val infoAlertDialog = AlertDialog.Builder(context!!)
+            .setTitle("GitFit Authors")
+            .setMessage("Patryk Marciszek-Kosieradzki\nAdrian Twarowski")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.cancel()
+            }
+            .create()
+
+        infoAlertDialog.show()
+    }
+
+    override fun openSettings() {
+        val settingsAlertDialog = AlertDialog.Builder(context!!)
+            .setTitle("Not Implemented Yet")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.cancel()
+            }
+            .create()
+
+        settingsAlertDialog.show()
     }
 
     override fun navigateToLoginFragment() {
