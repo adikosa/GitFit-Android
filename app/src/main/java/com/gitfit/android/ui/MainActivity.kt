@@ -1,6 +1,8 @@
 package com.gitfit.android.ui
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -10,17 +12,15 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.gitfit.android.PreferenceProvider
+import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.R
 import com.gitfit.android.databinding.ActivityMainBinding
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.login.LoginFragment
 import com.gitfit.android.utils.navigateWithoutComingBack
+import com.gitfit.android.utils.showToast
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
@@ -42,7 +42,18 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment)
         setupBottomNavView()
-        checkUser()
+
+        if (isNetworkConnected()) {
+            checkUser()
+        } else {
+            showToast("No internet connection")
+            // TODO change later
+        }
+    }
+
+    private fun isNetworkConnected(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnected
     }
 
     private fun setupBottomNavView() {
@@ -60,7 +71,13 @@ class MainActivity : AppCompatActivity() {
         if (preferences.userExists()) {
             val user = preferences.getUser()
 
-            CoroutineScope(Dispatchers.IO).launch {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                CoroutineScope(Dispatchers.Main).launch {
+                    showToast("Server connection error")
+                }
+            }
+
+            CoroutineScope(Dispatchers.IO).launch(handler) {
                 if (gitFitAPIRepository.isTokenValid(user.username!!, user.token!!)) {
                     withContext(Dispatchers.Main) {
                         navController.navigateWithoutComingBack(R.id.nav_graph_main)

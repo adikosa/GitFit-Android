@@ -1,10 +1,10 @@
 package com.gitfit.android.ui.login
 
-import com.gitfit.android.PreferenceProvider
-import com.gitfit.android.model.GithubTokenResponse
-import com.gitfit.android.model.User
-import com.gitfit.android.model.UserAuthResponse
-import com.gitfit.android.model.UserLoginRequest
+import com.gitfit.android.data.local.prefs.PreferenceProvider
+import com.gitfit.android.data.remote.response.GithubTokenResponse
+import com.gitfit.android.data.local.prefs.User
+import com.gitfit.android.data.remote.response.UserAuthResponse
+import com.gitfit.android.data.remote.request.UserLoginRequest
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.base.BaseViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -49,8 +49,7 @@ class LoginViewModel(
                     )
                 )
 
-                preferences.saveUser(User(userAuthResponse.username, userAuthResponse.token))
-
+                preferences.saveUser(User.fromAuthResponse(userAuthResponse))
 
                 withContext(Dispatchers.Main) {
                     navigator()!!.navigateToHomeFragment()

@@ -1,8 +1,8 @@
 package com.gitfit.android.ui.register
 
-import com.gitfit.android.PreferenceProvider
-import com.gitfit.android.model.User
-import com.gitfit.android.model.UserRegisterRequest
+import com.gitfit.android.data.local.prefs.PreferenceProvider
+import com.gitfit.android.data.local.prefs.User
+import com.gitfit.android.data.remote.request.UserRegisterRequest
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.base.BaseViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -15,15 +15,16 @@ class RegisterViewModel(
     private val preferences: PreferenceProvider
 ) : BaseViewModel<RegisterNavigator>() {
 
-    var userRegister = UserRegisterRequest("username", "token", "", "")
+    val user = User(
+        linesOfCodeGoal = "200",
+        cupsOfCoffeeGoal = "5"
+    )
 
     fun onRegisterButtonClick() {
         CoroutineScope(Dispatchers.IO).launch {
-            val userAuthResponse = gitFitAPIRepository.registerUser(
-                userRegister
-            )
-
-            preferences.saveUser(User(userAuthResponse.username, userAuthResponse.token))
+            val userRegisterRequest = UserRegisterRequest.fromUser(user)
+            val userAuthResponse = gitFitAPIRepository.registerUser(userRegisterRequest)
+            preferences.saveUser(User.fromAuthResponse(userAuthResponse))
 
             withContext(Dispatchers.Main) {
                 navigator()!!.navigateToHomeFragment()

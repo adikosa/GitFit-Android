@@ -1,4 +1,4 @@
-package com.gitfit.android.model
+package com.gitfit.android.data.remote.request
 
 data class UserLoginRequest(
     var username: String,

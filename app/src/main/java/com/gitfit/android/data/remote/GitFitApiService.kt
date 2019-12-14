@@ -1,6 +1,11 @@
-package com.gitfit.android.api
+package com.gitfit.android.data.remote
 
-import com.gitfit.android.model.*
+import com.gitfit.android.data.remote.request.PatchUserDtoRequest
+import com.gitfit.android.data.remote.request.UserLoginRequest
+import com.gitfit.android.data.remote.request.UserRegisterRequest
+import com.gitfit.android.data.remote.response.GithubTokenResponse
+import com.gitfit.android.data.remote.response.UserAuthResponse
+import com.gitfit.android.data.remote.response.UserResponse
 import retrofit2.http.*
 
 interface GitFitApiService {
@@ -16,6 +21,11 @@ interface GitFitApiService {
 
     @GET("users/{username}")
     suspend fun getUser(@Path("username") username: String): UserResponse
+
+    @PATCH("users/{username}")
+    suspend fun updateUser(@Path("username") username: String,
+                           @Header("Authorization") authorizationHeader: String,
+                           @Body patchUserDtoRequest: PatchUserDtoRequest): UserResponse
 
     @GET("users/{username}")
     suspend fun getUserWithAuthorization(@Path("username") username: String,

@@ -1,4 +1,4 @@
-package com.gitfit.android.model
+package com.gitfit.android.data.remote.response
 
 data class GithubTokenResponse(
     var username: String,

@@ -10,6 +10,10 @@
     <string name="activity_goals_title">Activity goals</string>
     <string name="lines_of_code">Lines of code</string>
     <string name="cups_of_coffee">Cups of coffee</string>
+    <string name="lines_of_code_goal_hint">Enter your daily lines of code goal</string>
+    <string name="cups_of_coffee_goal_hint">Enter your daily cups of coffee goal</string>
+    <string name="about_you_title">About you</string>
+    <string name="title_info">Info</string>
     <string name="cup">cup</string>
     <string name="points">points</string>
     <string name="drinking_coffee">Drinking coffee</string>

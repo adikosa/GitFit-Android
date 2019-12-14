@@ -48,7 +48,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
-    implementation 'com.google.android.material:material:1.1.0-beta02'
+    implementation 'com.google.android.material:material:1.2.0-alpha02'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment:2.1.0'
     implementation 'androidx.navigation:navigation-ui:2.1.0'
@@ -84,4 +84,11 @@ dependencies {
     implementation 'androidx.browser:browser:1.0.0'
 
     implementation 'com.getbase:floatingactionbutton:1.10.1'
+
+    implementation 'androidx.room:room-runtime:2.2.2'
+    implementation "androidx.room:room-ktx:2.2.2"
+    kapt 'androidx.room:room-compiler:2.2.2'
+
+    implementation 'com.github.lzyzsd:circleprogress:1.2.1'
+
 }
