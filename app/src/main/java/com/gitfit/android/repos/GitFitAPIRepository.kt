@@ -1,7 +1,8 @@
 package com.gitfit.android.repos
 
+import com.gitfit.android.data.local.db.entity.Activity
+import com.gitfit.android.data.local.db.entity.ActivityType
 import com.gitfit.android.data.remote.GitFitApiService
-import com.gitfit.android.data.local.prefs.User
 import com.gitfit.android.data.remote.request.PatchUserDtoRequest
 import com.gitfit.android.data.remote.request.UserLoginRequest
 import com.gitfit.android.data.remote.request.UserRegisterRequest
@@ -30,7 +31,40 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
         }
     }
 
-    suspend fun updateUser(username: String, patchUserDtoRequest: PatchUserDtoRequest, token: String) {
+    suspend fun getActivitites(username: String, token: String): List<Activity>? {
+        return try {
+            gitFitApiService.getActivities(
+                username,
+                AUTH_HEADER_PREFIX + token
+            )
+        } catch (httpException: HttpException) {
+            val responseCode = httpException.code()
+            if (responseCode == 404) {
+                null
+            } else {
+                throw httpException
+            }
+        }
+    }
+
+    suspend fun getActivityTypes(): List<ActivityType>? {
+        return try {
+            gitFitApiService.getActivityTypes()
+        } catch (httpException: HttpException) {
+            val responseCode = httpException.code()
+            if (responseCode == 404) {
+                null
+            } else {
+                throw httpException
+            }
+        }
+    }
+
+    suspend fun updateUser(
+        username: String,
+        patchUserDtoRequest: PatchUserDtoRequest,
+        token: String
+    ) {
         gitFitApiService.updateUser(
             username, AUTH_HEADER_PREFIX + token, patchUserDtoRequest
         )
@@ -38,8 +72,10 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
 
     suspend fun isTokenValid(username: String, token: String): Boolean {
         return try {
-            gitFitApiService.getUserWithAuthorization(username,
-                AUTH_HEADER_PREFIX + token)
+            gitFitApiService.getUserWithAuthorization(
+                username,
+                AUTH_HEADER_PREFIX + token
+            )
             true
         } catch (httpException: HttpException) {
             false

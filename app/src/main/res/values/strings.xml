@@ -14,7 +14,14 @@
     <string name="cups_of_coffee_goal_hint">Enter your daily cups of coffee goal</string>
     <string name="about_you_title">About you</string>
     <string name="title_info">Info</string>
-    <string name="cup">cup</string>
-    <string name="points">points</string>
+    <string name="cup">cup(s)</string>
+    <string name="line">line(s)</string>
+    <string name="points">point(s)</string>
     <string name="drinking_coffee">Drinking coffee</string>
+    <string name="code_addition">Code addition</string>
+    <string name="table_tennis">Table tennis</string>
+    <string name="minute">minute(s)</string>
+    <string name="console_game">Console game</string>
+    <string name="sync">Sync</string>
+
 </resources>

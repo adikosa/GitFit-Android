@@ -4,12 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.threeten.bp.LocalDateTime
 
-@Entity(tableName = "activities")
-data class Activity(
+@Entity(tableName = "activity_types")
+data class ActivityType (
     @PrimaryKey val id: Long,
-    val user: String,
-    val type: String,
-    val timestamp: LocalDateTime,
-    val duration: Int?,
+    val createdAt: LocalDateTime,
+    val name: String,
     val points: Int
 )

@@ -2,6 +2,7 @@ package com.gitfit.android
 
 import android.app.Application
 import com.gitfit.android.di.appModule
+import com.jakewharton.threetenabp.AndroidThreeTen
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -15,5 +16,6 @@ class MyApplication : Application() {
             androidContext(this@MyApplication)
             modules(appModule)
         }
+        AndroidThreeTen.init(this)
     }
 }

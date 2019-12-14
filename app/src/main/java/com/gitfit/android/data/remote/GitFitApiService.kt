@@ -1,5 +1,7 @@
 package com.gitfit.android.data.remote
 
+import com.gitfit.android.data.local.db.entity.Activity
+import com.gitfit.android.data.local.db.entity.ActivityType
 import com.gitfit.android.data.remote.request.PatchUserDtoRequest
 import com.gitfit.android.data.remote.request.UserLoginRequest
 import com.gitfit.android.data.remote.request.UserRegisterRequest
@@ -23,11 +25,24 @@ interface GitFitApiService {
     suspend fun getUser(@Path("username") username: String): UserResponse
 
     @PATCH("users/{username}")
-    suspend fun updateUser(@Path("username") username: String,
-                           @Header("Authorization") authorizationHeader: String,
-                           @Body patchUserDtoRequest: PatchUserDtoRequest): UserResponse
+    suspend fun updateUser(
+        @Path("username") username: String,
+        @Header("Authorization") authorizationHeader: String,
+        @Body patchUserDtoRequest: PatchUserDtoRequest
+    ): UserResponse
 
     @GET("users/{username}")
-    suspend fun getUserWithAuthorization(@Path("username") username: String,
-                                         @Header("Authorization") authorizationHeader: String): UserResponse
+    suspend fun getUserWithAuthorization(
+        @Path("username") username: String,
+        @Header("Authorization") authorizationHeader: String
+    ): UserResponse
+
+    @GET("/users/{username}/activities")
+    suspend fun getActivities(
+        @Path("username") username: String,
+        @Header("Authorization") authorizationHeader: String
+    ): List<Activity>
+
+    @GET("/activities/types")
+    suspend fun getActivityTypes(): List<ActivityType>
 }

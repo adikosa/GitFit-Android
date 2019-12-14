@@ -1,60 +1,129 @@
 package com.gitfit.android.ui.home.journal
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.gitfit.android.AppConstants.Companion.ACTIVITY_CODE_ADDITION
+import com.gitfit.android.AppConstants.Companion.ACTIVITY_COFFEE
+import com.gitfit.android.AppConstants.Companion.ACTIVITY_GAME_CONSOLE_BREAK
+import com.gitfit.android.AppConstants.Companion.ACTIVITY_TABLE_TENNIS
+import com.gitfit.android.AppConstants.Companion.ACTIVITY_TYPES
 import com.gitfit.android.R
+import com.gitfit.android.data.local.db.entity.Activity
+import com.gitfit.android.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.fragment_journal.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
 
-class JournalFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: JournalViewModel
+class JournalFragment : BaseFragment(), JournalNavigator, Toolbar.OnMenuItemClickListener {
+
+    private val journalViewModel: JournalViewModel by viewModel()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        journalViewModel.setNavigator(this)
+
+        journalViewModel.mIsLoading.observe(this, Observer {
+            setLoading(it)
+        })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.journal_menu, menu)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-            ViewModelProviders.of(this).get(JournalViewModel::class.java)
         return inflater.inflate(R.layout.fragment_journal, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recycler_view.setHasFixedSize(true)
-        recycler_view.layoutManager = LinearLayoutManager(context)
-        recycler_view.adapter = MyAdapter((1..20).toList())
+        journalViewModel.activities.observe(this, Observer {
+            it?.let { setRecyclerView(it) }
+        })
+
+        toolbar.setOnMenuItemClickListener(this)
+
+        //To avoid displaying error "No adapter attached skipping layout"
+        setRecyclerView(emptyList())
     }
 
-    private inner class MyAdapter constructor(private val devices: List<Int>) :
-        RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+    private fun setRecyclerView(activities: List<Activity>) {
+        recycler_view.setHasFixedSize(true)
+        recycler_view.layoutManager = LinearLayoutManager(context)
+        recycler_view.adapter = ActivitiesAdapter(activities.sortedByDescending { it.timestamp })
+    }
+
+    private inner class ActivitiesAdapter(private val activities: List<Activity>) :
+        RecyclerView.Adapter<ActivitiesAdapter.MyViewHolder>() {
+        val dateTimeFormatter: DateTimeFormatter =
+            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
 
         private inner class MyViewHolder(item: View) : RecyclerView.ViewHolder(item) {
-            val textView: TextView = item.findViewById(R.id.date_time_text)
-
+            val dateTime: TextView = item.findViewById(R.id.date_time_text)
+            val points: TextView = item.findViewById(R.id.points_number_text)
+            val value: TextView = item.findViewById(R.id.value_number_text)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            return when (viewType) {
+                ACTIVITY_TYPES.indexOf(ACTIVITY_COFFEE) -> MyViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.card_view_activity_coffee, parent, false)
+                )
+                ACTIVITY_TYPES.indexOf(ACTIVITY_TABLE_TENNIS) -> MyViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.card_view_activity_table_tennis, parent, false)
+                )
+                ACTIVITY_TYPES.indexOf(ACTIVITY_GAME_CONSOLE_BREAK) -> MyViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.card_view_activity_console, parent, false)
+                )
+                ACTIVITY_TYPES.indexOf(ACTIVITY_CODE_ADDITION) -> MyViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.card_view_activity_code, parent, false)
+                )
+                else -> throw Exception("Unknown activity!")
+            }
 
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.coffee_activity_card_view, parent, false)
-
-            return MyViewHolder(view)
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.textView.text = devices[position].toString()
+            val activity = activities[position]
+            //todo implement points -> value converter
+            holder.dateTime.text = activity.timestamp.format(dateTimeFormatter)
+            holder.points.text = activity.points.toString()
+            if (activity.type == "CODE_ADDITION")
+                holder.value.text = activity.points.toString()
+            if (activity.type == "TABLE_TENNIS")
+                holder.value.text = activity.duration.toString()
+            if (activity.type == "GAME_CONSOLE_BREAK")
+                holder.value.text = activity.duration.toString()
         }
 
         override fun getItemCount(): Int {
-            return devices.size
+            return activities.size
         }
 
+        override fun getItemViewType(position: Int): Int {
+            return ACTIVITY_TYPES.indexOf(activities[position].type)
+        }
+    }
+
+    override fun onMenuItemClick(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.action_sync) {
+            journalViewModel.loadData()
+            return true
+        }
+        return false
     }
 }
