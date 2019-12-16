@@ -5,6 +5,7 @@ import com.gitfit.android.data.local.db.entity.ActivityType
 import com.gitfit.android.data.remote.request.PatchUserDtoRequest
 import com.gitfit.android.data.remote.request.UserLoginRequest
 import com.gitfit.android.data.remote.request.UserRegisterRequest
+import com.gitfit.android.data.remote.response.ActivityResponse
 import com.gitfit.android.data.remote.response.GithubTokenResponse
 import com.gitfit.android.data.remote.response.UserAuthResponse
 import com.gitfit.android.data.remote.response.UserResponse
@@ -41,7 +42,7 @@ interface GitFitApiService {
     suspend fun getActivities(
         @Path("username") username: String,
         @Header("Authorization") authorizationHeader: String
-    ): List<Activity>
+    ): List<ActivityResponse>
 
     @GET("/activities/types")
     suspend fun getActivityTypes(): List<ActivityType>

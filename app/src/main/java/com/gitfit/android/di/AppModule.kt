@@ -31,7 +31,7 @@ val appModule = module {
     single { ActivityRepository(get()) }
     single { ActivityTypeRepository(get()) }
 
-    viewModel { HomeViewModel() }
+    viewModel { HomeViewModel(get(), get(), get()) }
     viewModel { LoginViewModel(get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
 

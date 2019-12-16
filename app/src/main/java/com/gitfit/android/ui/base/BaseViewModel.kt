@@ -6,7 +6,7 @@ import java.lang.ref.WeakReference
 
 abstract class BaseViewModel<N> : ViewModel() {
 
-    lateinit var mNavigator: WeakReference<N>
+    private lateinit var mNavigator: WeakReference<N>
     var mIsLoading: MutableLiveData<Boolean> = MutableLiveData()
         private set
 
