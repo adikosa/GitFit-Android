@@ -2,6 +2,7 @@ package com.gitfit.android.ui.home.journal
 
 import androidx.lifecycle.viewModelScope
 import com.gitfit.android.AppConstants.Companion.ACTIVITY_TYPES
+import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.data.local.prefs.User
 import com.gitfit.android.repos.ActivityRepository
@@ -56,6 +57,7 @@ class JournalViewModel(
         val activities =
             gitFitAPIRepository.getActivities(currentUser.username!!, currentUser.token!!)
                 ?.filter { ACTIVITY_TYPES.contains(it.type) }
+                ?.map { a -> Activity.fromActivityResponse(a) }
 
         activities?.let {
             activityRepository.deleteAll()

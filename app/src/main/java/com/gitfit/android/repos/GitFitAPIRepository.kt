@@ -7,6 +7,7 @@ import com.gitfit.android.data.remote.request.PatchActivityRequest
 import com.gitfit.android.data.remote.request.PatchUserRequest
 import com.gitfit.android.data.remote.request.UserLoginRequest
 import com.gitfit.android.data.remote.request.UserRegisterRequest
+import com.gitfit.android.data.remote.response.ActivityResponse
 import com.gitfit.android.data.remote.response.UserResponse
 import retrofit2.HttpException
 
@@ -32,7 +33,7 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
         }
     }
 
-    suspend fun getActivities(username: String, token: String): List<Activity>? {
+    suspend fun getActivities(username: String, token: String): List<ActivityResponse>? {
         return try {
             gitFitApiService.getActivities(
                 username,

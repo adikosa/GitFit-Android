@@ -8,6 +8,7 @@ import com.gitfit.android.repos.ActivityRepository
 import com.gitfit.android.repos.ActivityTypeRepository
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.home.home.HomeViewModel
+import com.gitfit.android.ui.home.home.add_activity.AddActivityViewModel
 import com.gitfit.android.ui.home.journal.JournalViewModel
 import com.gitfit.android.ui.home.journal.editactivity.EditActivityViewModel
 import com.gitfit.android.ui.home.profile.ProfileViewModel
@@ -18,7 +19,6 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-
 
     single { RetrofitClient() }
     single { get<RetrofitClient>().getGitFitService() }
@@ -32,11 +32,15 @@ val appModule = module {
     single { ActivityRepository(get()) }
     single { ActivityTypeRepository(get()) }
 
-    viewModel { HomeViewModel() }
+
     viewModel { LoginViewModel(get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
 
-    viewModel { ProfileViewModel(get(), get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get()) }
+    viewModel { AddActivityViewModel() }
+
     viewModel { JournalViewModel(get(), get(), get(), get()) }
     viewModel { (activityId: Long) -> EditActivityViewModel(activityId, get(), get(), get()) }
+
+    viewModel { ProfileViewModel(get(), get(), get()) }
 }

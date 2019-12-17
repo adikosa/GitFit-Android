@@ -31,11 +31,12 @@
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.onAddActivityClick()}"
                 app:fab_icon="@drawable/ic_create_black_24dp"
                 fab:fab_colorNormal="@color/white"
                 fab:fab_colorPressed="@color/white_pressed"
                 fab:fab_size="mini"
-                fab:fab_title="Add activity" />
+                fab:fab_title="@string/add_activity" />
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
@@ -52,15 +53,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
-                    app:expandedTitleGravity="top"
+                    app:collapsedTitleTextAppearance="@style/collapsed_toolbar"
+                    app:expandedTitleMarginStart="@dimen/main_horizontal_margin"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
                     <androidx.appcompat.widget.Toolbar
                         android:id="@+id/toolbar"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
+                        app:contentInsetStart="@dimen/main_horizontal_margin"
                         app:layout_collapseMode="pin"
                         app:title="@string/title_home" />
+
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -74,7 +78,7 @@
                     android:layout_height="wrap_content">
 
                     <com.github.lzyzsd.circleprogress.ArcProgress
-                        android:id="@+id/arc_progress"
+                        android:id="@+id/mArcProgress"
                         android:layout_width="250dp"
                         android:layout_height="250dp"
                         android:layout_marginTop="25dp"
@@ -82,7 +86,6 @@
                         app:arc_bottom_text_size="16sp"
                         app:arc_finished_color="@color/colorPrimaryDark"
                         app:arc_max="100"
-                        app:arc_progress="55"
                         app:arc_suffix_text_size="34sp"
                         app:arc_text_size="60sp"
                         app:arc_unfinished_color="@color/half_black"
@@ -96,7 +99,7 @@
                         android:gravity="center_vertical"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/arc_progress">
+                        app:layout_constraintTop_toBottomOf="@id/mArcProgress">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -114,9 +117,10 @@
                                     android:layout_height="wrap_content">
 
                                     <TextView
+                                        android:id="@+id/mLinesOfCodeTextView"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="2500"
+                                        android:text="@{viewModel.linesOfCode.toString()}"
                                         android:textColor="@color/black_semi_transparent"
                                         android:textSize="24sp"
                                         android:textStyle="bold" />
@@ -129,7 +133,7 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="9999" />
+                                        android:text="@{viewModel.user.linesOfCodeGoal}" />
 
                                 </LinearLayout>
 
@@ -142,7 +146,6 @@
                             </LinearLayout>
 
                         </LinearLayout>
-
 
 
                         <Space
@@ -178,9 +181,10 @@
                                     android:layout_height="wrap_content">
 
                                     <TextView
+                                        android:id="@+id/mCupsOfCoffeeTextView"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="2"
+                                        android:text="@{viewModel.cupsOfCoffee.toString()}"
                                         android:textColor="@color/black_semi_transparent"
                                         android:textSize="24sp"
                                         android:textStyle="bold" />
@@ -193,7 +197,7 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="5" />
+                                        android:text="@{viewModel.user.cupsOfCoffeeGoal}" />
 
                                 </LinearLayout>
 

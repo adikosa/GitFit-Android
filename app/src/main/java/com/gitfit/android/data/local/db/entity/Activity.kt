@@ -2,6 +2,7 @@ package com.gitfit.android.data.local.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.gitfit.android.data.remote.response.ActivityResponse
 import com.gitfit.android.data.remote.response.PatchActivityResponse
 import org.threeten.bp.LocalDateTime
 
@@ -15,6 +16,21 @@ data class Activity(
     val points: Int
 ) {
     companion object {
+        fun fromActivitiesResponse(activitiesResponse: List<ActivityResponse>): List<Activity> {
+            return activitiesResponse.map { fromActivityResponse(it) }
+        }
+
+        fun fromActivityResponse(activityResponse: ActivityResponse): Activity {
+            return Activity(
+                activityResponse.id,
+                activityResponse.user,
+                activityResponse.type,
+                activityResponse.timestamp,
+                activityResponse.duration,
+                activityResponse.points
+            )
+        }
+
         fun fromPatchActivityResponse(patchActivityResponse: PatchActivityResponse): Activity {
             return Activity(
                 patchActivityResponse.id,
