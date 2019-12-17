@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.*
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gitfit.android.AppConstants.Companion.ACTIVITY_CODE_ADDITION
@@ -68,10 +70,24 @@ class JournalFragment : BaseFragment(), JournalNavigator, Toolbar.OnMenuItemClic
         val dateTimeFormatter: DateTimeFormatter =
             DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
 
-        private inner class MyViewHolder(item: View) : RecyclerView.ViewHolder(item) {
+        private inner class MyViewHolder(item: View) : RecyclerView.ViewHolder(item),
+            View.OnClickListener {
             val dateTime: TextView = item.findViewById(R.id.date_time_text)
             val points: TextView = item.findViewById(R.id.points_number_text)
             val value: TextView = item.findViewById(R.id.value_number_text)
+
+            init {
+                item.setOnClickListener(this)
+            }
+
+            override fun onClick(v: View?) {
+                if (activities[adapterPosition].type != ACTIVITY_CODE_ADDITION) {
+                    findNavController().navigate(
+                        R.id.action_navigation_journal_to_navigation_edit_activity,
+                        bundleOf("activityId" to activities[adapterPosition].id)
+                    )
+                }
+            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -99,15 +115,17 @@ class JournalFragment : BaseFragment(), JournalNavigator, Toolbar.OnMenuItemClic
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val activity = activities[position]
-            //todo implement points -> value converter
+            //todo rename duration field to value field - in api and in android
             holder.dateTime.text = activity.timestamp.format(dateTimeFormatter)
-            holder.points.text = activity.points.toString()
-            if (activity.type == "CODE_ADDITION")
-                holder.value.text = activity.points.toString()
-            if (activity.type == "TABLE_TENNIS")
-                holder.value.text = activity.duration.toString()
-            if (activity.type == "GAME_CONSOLE_BREAK")
-                holder.value.text = activity.duration.toString()
+            holder.points.text = activity.points.toString()//it's ok
+            //todo uncomment text below and delete when
+//            holder.value.text = activity.duration.toString()
+            when (activity.type) {
+                ACTIVITY_CODE_ADDITION -> holder.value.text = activity.points.toString()
+                ACTIVITY_COFFEE -> holder.value.text = "1"
+                ACTIVITY_TABLE_TENNIS -> holder.value.text = activity.duration.toString()
+                ACTIVITY_GAME_CONSOLE_BREAK -> holder.value.text = activity.duration.toString()
+            }
         }
 
         override fun getItemCount(): Int {
@@ -121,7 +139,7 @@ class JournalFragment : BaseFragment(), JournalNavigator, Toolbar.OnMenuItemClic
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_sync) {
-            journalViewModel.loadData()
+            journalViewModel.onActionSyncClick()
             return true
         }
         return false

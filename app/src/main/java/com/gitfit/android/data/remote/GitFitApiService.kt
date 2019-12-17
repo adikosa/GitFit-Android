@@ -45,4 +45,11 @@ interface GitFitApiService {
 
     @GET("/activities/types")
     suspend fun getActivityTypes(): List<ActivityType>
+
+    @DELETE("/users/{username}/activities/{activityId}")
+    suspend fun deleteUserActivity(
+        @Path("username") username: String,
+        @Header("Authorization") authorizationHeader: String,
+        @Path("activityId") activityId: Long
+    )
 }

@@ -33,7 +33,7 @@
             android:id="@+id/drinking_coffee_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/table_tennis"
+            android:text="@string/activity_table_tennis"
             android:textStyle="bold" />
 
         <LinearLayout

@@ -13,10 +13,22 @@
         android:id="@+id/navigation_journal"
         android:name="com.gitfit.android.ui.home.journal.JournalFragment"
         android:label="@string/title_journal"
-        tools:layout="@layout/fragment_journal" />
+        tools:layout="@layout/fragment_journal">
+        <action
+            android:id="@+id/action_navigation_journal_to_navigation_edit_activity"
+            app:destination="@id/navigation_edit_activity" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.gitfit.android.ui.home.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
+    <dialog
+        android:id="@+id/navigation_edit_activity"
+        android:name="com.gitfit.android.ui.home.journal.editactivity.EditActivityDialogFragment"
+        tools:layout="@layout/fragment_dialog_edit_activity" >
+        <argument
+            android:name="activityId"
+            app:argType="long" />
+    </dialog>
 </navigation>

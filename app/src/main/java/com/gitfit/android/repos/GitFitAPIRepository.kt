@@ -31,7 +31,7 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
         }
     }
 
-    suspend fun getActivitites(username: String, token: String): List<Activity>? {
+    suspend fun getActivities(username: String, token: String): List<Activity>? {
         return try {
             gitFitApiService.getActivities(
                 username,
@@ -87,6 +87,9 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
 
     suspend fun registerUser(userRegisterRequest: UserRegisterRequest) =
         gitFitApiService.registerUser(userRegisterRequest)
+
+    suspend fun deleteUserActivity(username: String, token: String, activityId: Long) =
+        gitFitApiService.deleteUserActivity(username, AUTH_HEADER_PREFIX + token, activityId)
 
 
 }

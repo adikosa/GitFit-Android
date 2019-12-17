@@ -6,6 +6,8 @@ import com.gitfit.android.data.local.db.entity.Activity
 
 @Dao
 interface ActivityDao {
+    @Query("SELECT * FROM activities where id=:id")
+    suspend fun get(id: Long): Activity
 
     @Query("SELECT * FROM activities")
     suspend fun getAll(): List<Activity>

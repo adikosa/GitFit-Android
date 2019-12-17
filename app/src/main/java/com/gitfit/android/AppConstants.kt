@@ -2,9 +2,9 @@ package com.gitfit.android
 
 class AppConstants {
     companion object {
-        const val GIT_FIT_API_URL = "http://localhost:1234"
+        const val GIT_FIT_API_URL = "http://192.168.1.150:1234"
 
-        const val GITHUB_CODE_URL = "http://localhost:1234/github/login/oauth/authorize"
+        const val GITHUB_CODE_URL = "$GIT_FIT_API_URL/github/login/oauth/authorize"
 
         //ACTIVITY TYPES
         const val ACTIVITY_COFFEE = "COFFEE"

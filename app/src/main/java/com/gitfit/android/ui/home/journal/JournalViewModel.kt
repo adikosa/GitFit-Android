@@ -23,16 +23,18 @@ class JournalViewModel(
     var activities = activityRepository.getLiveData()
 
     init {
+        onActionSyncClick()
+    }
+
+    fun onActionSyncClick() {
         loadData()
     }
 
-    fun loadData() {
-        viewModelScope.launch {
-            setLoading(true)
-            loadActivityTypes()
-            loadActivities(preferenceProvider.getUser())
-            setLoading(false)
-        }
+    private fun loadData() = viewModelScope.launch {
+        setLoading(true)
+        loadActivityTypes()
+        loadActivities(preferenceProvider.getUser())
+        setLoading(false)
     }
 
     private suspend fun loadActivityTypes() = withContext(Dispatchers.IO) {
@@ -52,7 +54,7 @@ class JournalViewModel(
 
     private suspend fun loadActivities(currentUser: User) = withContext(Dispatchers.IO) {
         val activities =
-            gitFitAPIRepository.getActivitites(currentUser.username!!, currentUser.token!!)
+            gitFitAPIRepository.getActivities(currentUser.username!!, currentUser.token!!)
                 ?.filter { ACTIVITY_TYPES.contains(it.type) }
 
         activities?.let {

@@ -9,6 +9,7 @@ import com.gitfit.android.repos.ActivityTypeRepository
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.home.home.HomeViewModel
 import com.gitfit.android.ui.home.journal.JournalViewModel
+import com.gitfit.android.ui.home.journal.editactivity.EditActivityViewModel
 import com.gitfit.android.ui.home.profile.ProfileViewModel
 import com.gitfit.android.ui.login.LoginViewModel
 import com.gitfit.android.ui.register.RegisterViewModel
@@ -37,4 +38,5 @@ val appModule = module {
 
     viewModel { ProfileViewModel(get(), get(), get()) }
     viewModel { JournalViewModel(get(), get(), get(), get()) }
+    viewModel { (activityId: Long) -> EditActivityViewModel(activityId, get(), get(), get()) }
 }
