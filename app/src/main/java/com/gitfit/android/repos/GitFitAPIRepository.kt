@@ -1,9 +1,8 @@
 package com.gitfit.android.repos
 
-import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.db.entity.ActivityType
 import com.gitfit.android.data.remote.GitFitApiService
-import com.gitfit.android.data.remote.request.PatchUserDtoRequest
+import com.gitfit.android.data.remote.request.PatchUserRequest
 import com.gitfit.android.data.remote.request.UserLoginRequest
 import com.gitfit.android.data.remote.request.UserRegisterRequest
 import com.gitfit.android.data.remote.response.ActivityResponse
@@ -63,11 +62,11 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
 
     suspend fun updateUser(
         username: String,
-        patchUserDtoRequest: PatchUserDtoRequest,
+        patchUserRequest: PatchUserRequest,
         token: String
     ) {
         gitFitApiService.updateUser(
-            username, AUTH_HEADER_PREFIX + token, patchUserDtoRequest
+            username, AUTH_HEADER_PREFIX + token, patchUserRequest
         )
     }
 

@@ -1,6 +1,5 @@
 package com.gitfit.android.ui.home.home
 
-import android.animation.AnimatorInflater
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +8,7 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.gitfit.android.R
 import com.gitfit.android.databinding.FragmentHomeBinding
 import com.gitfit.android.ui.base.BaseFragment
@@ -52,6 +52,10 @@ class HomeFragment : BaseFragment(), HomeNavigator {
                 duration = 500
             }.start()
         })
+    }
+
+    override fun openNewActivityDialog() {
+        findNavController().navigate(R.id.action_navigation_home_to_navigation_add_activity)
     }
 
     override fun onDestroyView() {

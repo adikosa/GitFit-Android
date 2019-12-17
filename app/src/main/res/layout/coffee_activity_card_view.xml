@@ -33,7 +33,7 @@
             android:id="@+id/drinking_coffee_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/drinking_coffee"
+            android:text="@string/activity_drinking_coffee"
             android:textStyle="bold" />
 
         <LinearLayout

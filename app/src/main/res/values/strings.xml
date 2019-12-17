@@ -17,11 +17,18 @@
     <string name="cup">cup(s)</string>
     <string name="line">line(s)</string>
     <string name="points">point(s)</string>
-    <string name="drinking_coffee">Drinking coffee</string>
-    <string name="code_addition">Code addition</string>
-    <string name="table_tennis">Table tennis</string>
+    <string name="activity_drinking_coffee">Drinking coffee</string>
+    <string name="activity_code_addition">Code addition</string>
+    <string name="activity_table_tennis">Table tennis</string>
     <string name="minute">minute(s)</string>
-    <string name="console_game">Console game</string>
+    <string name="activity_console_game">Console game</string>
     <string name="sync">Sync</string>
+    <string name="activity_type">Activity Type</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="value">Value</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="add_activity">Add Activity</string>
 
 </resources>

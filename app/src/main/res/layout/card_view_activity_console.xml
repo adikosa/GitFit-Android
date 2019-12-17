@@ -33,7 +33,7 @@
             android:id="@+id/drinking_coffee_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/console_game"
+            android:text="@string/activity_console_game"
             android:textStyle="bold" />
 
         <LinearLayout

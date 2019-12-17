@@ -19,14 +19,13 @@ class HomeViewModel(
     private val preferenceProvider: PreferenceProvider
 ) : BaseViewModel<HomeNavigator>() {
 
-    private var job: Job = Job().also { it.complete() }
+    private var job: Job
     var user: User = preferenceProvider.getUser()
     var linesOfCode = MutableLiveData(0)
     var cupsOfCoffee = MutableLiveData(0)
     var progress = MutableLiveData(0)
 
     init {
-        println(job.isActive)
         job = viewModelScope.launch {
             setLoading(true)
             loadProgress()
@@ -34,7 +33,7 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun loadProgress() = withContext(Dispatchers.IO) {
+    private suspend fun loadProgress() = runBlocking(Dispatchers.IO) {
         val activitiesResponse =
             gitFitAPIRepository.getActivities(user.username!!, user.token!!)
 
@@ -63,6 +62,10 @@ class HomeViewModel(
 
     fun stopLoading() {
         job.cancel()
+    }
+
+    fun onAddActivityClick() {
+        navigator()?.openNewActivityDialog()
     }
 
 }

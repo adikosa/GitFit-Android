@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.data.local.prefs.User
-import com.gitfit.android.data.remote.request.PatchUserDtoRequest
+import com.gitfit.android.data.remote.request.PatchUserRequest
 import com.gitfit.android.repos.ActivityRepository
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.base.BaseViewModel
@@ -34,7 +34,7 @@ class ProfileViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             gitFitAPIRepository.updateUser(
                 user.username!!,
-                PatchUserDtoRequest.fromUser(user),
+                PatchUserRequest.fromUser(user),
                 user.token!!
             )
         }

@@ -31,11 +31,12 @@
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{() -> viewModel.onAddActivityClick()}"
                 app:fab_icon="@drawable/ic_create_black_24dp"
                 fab:fab_colorNormal="@color/white"
                 fab:fab_colorPressed="@color/white_pressed"
                 fab:fab_size="mini"
-                fab:fab_title="Add activity" />
+                fab:fab_title="@string/add_activity" />
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

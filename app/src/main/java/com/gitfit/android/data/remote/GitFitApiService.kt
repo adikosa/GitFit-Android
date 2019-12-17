@@ -1,8 +1,7 @@
 package com.gitfit.android.data.remote
 
-import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.db.entity.ActivityType
-import com.gitfit.android.data.remote.request.PatchUserDtoRequest
+import com.gitfit.android.data.remote.request.PatchUserRequest
 import com.gitfit.android.data.remote.request.UserLoginRequest
 import com.gitfit.android.data.remote.request.UserRegisterRequest
 import com.gitfit.android.data.remote.response.ActivityResponse
@@ -29,7 +28,7 @@ interface GitFitApiService {
     suspend fun updateUser(
         @Path("username") username: String,
         @Header("Authorization") authorizationHeader: String,
-        @Body patchUserDtoRequest: PatchUserDtoRequest
+        @Body patchUserRequest: PatchUserRequest
     ): UserResponse
 
     @GET("users/{username}")
