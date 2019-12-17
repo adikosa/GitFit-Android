@@ -2,10 +2,12 @@ package com.gitfit.android.data.remote
 
 import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.db.entity.ActivityType
-import com.gitfit.android.data.remote.request.PatchUserDtoRequest
+import com.gitfit.android.data.remote.request.PatchActivityRequest
+import com.gitfit.android.data.remote.request.PatchUserRequest
 import com.gitfit.android.data.remote.request.UserLoginRequest
 import com.gitfit.android.data.remote.request.UserRegisterRequest
 import com.gitfit.android.data.remote.response.GithubTokenResponse
+import com.gitfit.android.data.remote.response.PatchActivityResponse
 import com.gitfit.android.data.remote.response.UserAuthResponse
 import com.gitfit.android.data.remote.response.UserResponse
 import retrofit2.http.*
@@ -28,7 +30,7 @@ interface GitFitApiService {
     suspend fun updateUser(
         @Path("username") username: String,
         @Header("Authorization") authorizationHeader: String,
-        @Body patchUserDtoRequest: PatchUserDtoRequest
+        @Body patchUserRequest: PatchUserRequest
     ): UserResponse
 
     @GET("users/{username}")
@@ -43,8 +45,13 @@ interface GitFitApiService {
         @Header("Authorization") authorizationHeader: String
     ): List<Activity>
 
-    @GET("/activities/types")
-    suspend fun getActivityTypes(): List<ActivityType>
+    @PATCH("/users/{username}/activities/{activityId}")
+    suspend fun patchUserActivity(
+        @Path("username") username: String,
+        @Header("Authorization") authorizationHeader: String,
+        @Path("activityId") activityId: Long,
+        @Body patchActivityRequest: PatchActivityRequest
+    ): PatchActivityResponse
 
     @DELETE("/users/{username}/activities/{activityId}")
     suspend fun deleteUserActivity(
@@ -52,4 +59,7 @@ interface GitFitApiService {
         @Header("Authorization") authorizationHeader: String,
         @Path("activityId") activityId: Long
     )
+
+    @GET("/activities/types")
+    suspend fun getActivityTypes(): List<ActivityType>
 }

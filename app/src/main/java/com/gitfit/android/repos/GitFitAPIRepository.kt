@@ -3,7 +3,8 @@ package com.gitfit.android.repos
 import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.db.entity.ActivityType
 import com.gitfit.android.data.remote.GitFitApiService
-import com.gitfit.android.data.remote.request.PatchUserDtoRequest
+import com.gitfit.android.data.remote.request.PatchActivityRequest
+import com.gitfit.android.data.remote.request.PatchUserRequest
 import com.gitfit.android.data.remote.request.UserLoginRequest
 import com.gitfit.android.data.remote.request.UserRegisterRequest
 import com.gitfit.android.data.remote.response.UserResponse
@@ -62,11 +63,11 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
 
     suspend fun updateUser(
         username: String,
-        patchUserDtoRequest: PatchUserDtoRequest,
+        patchUserRequest: PatchUserRequest,
         token: String
     ) {
         gitFitApiService.updateUser(
-            username, AUTH_HEADER_PREFIX + token, patchUserDtoRequest
+            username, AUTH_HEADER_PREFIX + token, patchUserRequest
         )
     }
 
@@ -91,5 +92,7 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
     suspend fun deleteUserActivity(username: String, token: String, activityId: Long) =
         gitFitApiService.deleteUserActivity(username, AUTH_HEADER_PREFIX + token, activityId)
 
+    suspend fun patchUserActivity(username: String, token: String, activityId: Long, patchActivityRequest: PatchActivityRequest) =
+        gitFitApiService.patchUserActivity(username, AUTH_HEADER_PREFIX + token, activityId, patchActivityRequest)
 
 }

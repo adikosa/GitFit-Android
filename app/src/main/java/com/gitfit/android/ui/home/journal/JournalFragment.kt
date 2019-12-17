@@ -115,17 +115,11 @@ class JournalFragment : BaseFragment(), JournalNavigator, Toolbar.OnMenuItemClic
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val activity = activities[position]
-            //todo rename duration field to value field - in api and in android
             holder.dateTime.text = activity.timestamp.format(dateTimeFormatter)
-            holder.points.text = activity.points.toString()//it's ok
-            //todo uncomment text below and delete when
-//            holder.value.text = activity.duration.toString()
-            when (activity.type) {
-                ACTIVITY_CODE_ADDITION -> holder.value.text = activity.points.toString()
-                ACTIVITY_COFFEE -> holder.value.text = "1"
-                ACTIVITY_TABLE_TENNIS -> holder.value.text = activity.duration.toString()
-                ACTIVITY_GAME_CONSOLE_BREAK -> holder.value.text = activity.duration.toString()
-            }
+            holder.points.text = activity.points.toString()
+            holder.value.text = activity.duration.toString()
+            if (activity.type == ACTIVITY_CODE_ADDITION)
+                holder.value.text = activity.points.toString()
         }
 
         override fun getItemCount(): Int {

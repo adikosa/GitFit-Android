@@ -11,6 +11,8 @@ class ActivityRepository(private val activityDao: ActivityDao) {
 
     suspend fun delete(activity: Activity) = activityDao.delete(activity)
 
+    suspend fun insert(activity: Activity) = activityDao.insert(activity)
+
     suspend fun insertList(activities: List<Activity>) = activityDao.insertList(activities)
 
     fun getLiveData() = activityDao.getLiveData()

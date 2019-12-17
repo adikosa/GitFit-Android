@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import com.gitfit.android.AppConstants.Companion.ACTIVITY_COFFEE
 import com.gitfit.android.AppConstants.Companion.ACTIVITY_GAME_CONSOLE_BREAK
 import com.gitfit.android.AppConstants.Companion.ACTIVITY_TABLE_TENNIS
@@ -54,15 +55,27 @@ class EditActivityDialogFragment : DialogFragment(), EditActivityNavigator {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setActivityTypeObserver()
         setActivityTypesMenu()
         setListeners()
     }
 
+    private fun setActivityTypeObserver() {
+        viewModel.activityType.observe(this, Observer {
+            value_text_layout.hint = when (it) {
+                ACTIVITY_GAME_CONSOLE_BREAK -> getString(R.string.duration)
+                ACTIVITY_COFFEE -> getString(R.string.cups_of_coffee)
+                ACTIVITY_TABLE_TENNIS -> getString(R.string.duration)
+                else -> getString(R.string.value)
+            }
+        })
+    }
+
     private fun setActivityTypesMenu() {
         val activityTypeResId = when (viewModel.activity.type) {
+            ACTIVITY_GAME_CONSOLE_BREAK -> R.string.activity_console_game
             ACTIVITY_COFFEE -> R.string.activity_drinking_coffee
             ACTIVITY_TABLE_TENNIS -> R.string.activity_table_tennis
-            ACTIVITY_GAME_CONSOLE_BREAK -> R.string.activity_console_game
             else -> throw Exception("Unknown activity!")
         }
 
@@ -129,7 +142,7 @@ class EditActivityDialogFragment : DialogFragment(), EditActivityNavigator {
     override fun showDeleteDialog() {
         MaterialAlertDialogBuilder(context)
             .setMessage(R.string.delete_dialog_message)
-            .setPositiveButton(R.string.yes_button) { _, _ -> viewModel.deleteActivity() }
+            .setPositiveButton(R.string.yes_button) { _, _ -> viewModel.onConfirmDeleteClick() }
             .setNegativeButton(R.string.no_button) { dialog, _ -> dialog.dismiss() }
             .show()
     }

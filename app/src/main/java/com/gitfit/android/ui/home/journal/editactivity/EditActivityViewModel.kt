@@ -2,7 +2,9 @@ package com.gitfit.android.ui.home.journal.editactivity
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.prefs.PreferenceProvider
+import com.gitfit.android.data.remote.request.PatchActivityRequest
 import com.gitfit.android.repos.ActivityRepository
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.base.BaseViewModel
@@ -70,25 +72,48 @@ class EditActivityViewModel(
         navigator()?.closeDialog()
     }
 
-    fun onSaveButtonClick() {
-        //TODO implement
+    fun onSaveButtonClick() = viewModelScope.launch {
+        patchActivity()
+        navigator()?.closeDialog()
     }
+
+    private suspend fun patchActivity() =
+        withContext(Dispatchers.IO) {
+            val patchActivityRequest = PatchActivityRequest(
+                activity.id,
+                activity.user,
+                activityType.value!!,
+                dateTime.value!!,
+                value.value!!,
+                value.value!!
+            )
+
+            val patchActivityResponse = gitFitAPIRepository.patchUserActivity(
+                currentUser.username!!,
+                currentUser.token!!,
+                activity.id,
+                patchActivityRequest
+            )
+
+            val activity = Activity.fromPatchActivityResponse(patchActivityResponse)
+            activityRepository.insert(activity)
+        }
 
     fun onDeleteButtonClick() {
         navigator()?.showDeleteDialog()
     }
 
-    fun deleteActivity() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                gitFitAPIRepository.deleteUserActivity(
-                    currentUser.username!!,
-                    currentUser.token!!,
-                    activity.id
-                )
-                activityRepository.delete(activity)
-            }
-            navigator()?.closeDialog()
-        }
+    fun onConfirmDeleteClick() = viewModelScope.launch {
+        deleteActivity()
+        navigator()?.closeDialog()
+    }
+
+    private suspend fun deleteActivity() = withContext(Dispatchers.IO) {
+        gitFitAPIRepository.deleteUserActivity(
+            currentUser.username!!,
+            currentUser.token!!,
+            activity.id
+        )
+        activityRepository.delete(activity)
     }
 }
