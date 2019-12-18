@@ -16,13 +16,14 @@ import com.gitfit.android.AppConstants.Companion.ACTIVITY_GAME_CONSOLE_BREAK
 import com.gitfit.android.AppConstants.Companion.ACTIVITY_TABLE_TENNIS
 import com.gitfit.android.R
 import com.gitfit.android.databinding.FragmentDialogEditActivityBinding
+import com.gitfit.android.ui.base.dialog.BaseDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.fragment_dialog_edit_activity.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 
-class EditActivityDialogFragment : DialogFragment(), EditActivityNavigator {
+class EditActivityDialogFragment : BaseDialogFragment(), EditActivityNavigator {
 
     private val viewModel: EditActivityViewModel by viewModel { parametersOf(arguments!!.getLong("activityId")) }
 
@@ -56,8 +57,8 @@ class EditActivityDialogFragment : DialogFragment(), EditActivityNavigator {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setActivityTypeObserver()
         setActivityTypesMenu()
+        setActivityTypeObserver()
         setListeners()
     }
 

@@ -5,9 +5,7 @@ import com.gitfit.android.data.remote.GitFitApiService
 import com.gitfit.android.data.remote.NoConnectivityException
 import com.gitfit.android.data.remote.ResultWrapper
 import com.gitfit.android.data.remote.request.*
-import com.gitfit.android.data.remote.response.ActivityResponse
-import com.gitfit.android.data.remote.response.GithubTokenResponse
-import com.gitfit.android.data.remote.response.UserResponse
+import com.gitfit.android.data.remote.response.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -101,14 +99,22 @@ class GitFitAPIRepository(
     suspend fun registerUser(userRegisterRequest: UserRegisterRequest) =
         gitFitApiService.registerUser(userRegisterRequest)
 
-    suspend fun deleteUserActivity(username: String, token: String, activityId: Long) =
-        gitFitApiService.deleteUserActivity(username, AUTH_HEADER_PREFIX + token, activityId)
+    suspend fun deleteUserActivity(username: String, token: String, activityId: Long): ResultWrapper<Unit> {
+        return safeApiCall(dispatcher) {
+            gitFitApiService.deleteUserActivity(username, AUTH_HEADER_PREFIX + token, activityId)
+        }
+    }
 
-    suspend fun patchUserActivity(username: String, token: String, activityId: Long, patchActivityRequest: PatchActivityRequest) =
-        gitFitApiService.patchUserActivity(username, AUTH_HEADER_PREFIX + token, activityId, patchActivityRequest)
+    suspend fun patchUserActivity(username: String, token: String, activityId: Long, patchActivityRequest: PatchActivityRequest): ResultWrapper<PatchActivityResponse> {
+        return safeApiCall(dispatcher) {
+            gitFitApiService.patchUserActivity(username, AUTH_HEADER_PREFIX + token, activityId, patchActivityRequest)
+        }
+    }
 
-    suspend fun saveUserActivity(username: String, token: String, postActivityRequest: PostActivityRequest) {
-        gitFitApiService.saveUserActivity(username, AUTH_HEADER_PREFIX + token, postActivityRequest)
+    suspend fun saveUserActivity(username: String, token: String, postActivityRequest: PostActivityRequest): ResultWrapper<PostActivityResponse> {
+        return safeApiCall(dispatcher) {
+            gitFitApiService.saveUserActivity(username, AUTH_HEADER_PREFIX + token, postActivityRequest)
+        }
     }
 
 }

@@ -8,17 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.gitfit.android.AppConstants.Companion.ACTIVITY_COFFEE
 import com.gitfit.android.AppConstants.Companion.ACTIVITY_GAME_CONSOLE_BREAK
 import com.gitfit.android.AppConstants.Companion.ACTIVITY_TABLE_TENNIS
 import com.gitfit.android.R
 import com.gitfit.android.databinding.FragmentDialogAddActivityBinding
-import kotlinx.android.synthetic.main.fragment_dialog_add_activity.*
+import com.gitfit.android.ui.base.dialog.BaseDialogFragment
+import kotlinx.android.synthetic.main.fragment_dialog_add_activity.mActivityTypeDropDown
+import kotlinx.android.synthetic.main.fragment_dialog_add_activity.mDateEditText
+import kotlinx.android.synthetic.main.fragment_dialog_add_activity.mTimeEditText
+import kotlinx.android.synthetic.main.fragment_dialog_add_activity.value_text_layout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AddActivityDialogFragment : DialogFragment(), AddActivityDialogNavigator {
+class AddActivityDialogFragment : BaseDialogFragment(), AddActivityDialogNavigator {
 
     private val addActivityViewModel: AddActivityViewModel by viewModel()
 
@@ -43,7 +47,19 @@ class AddActivityDialogFragment : DialogFragment(), AddActivityDialogNavigator {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setActivityTypesDropDown()
+        setActivityTypeObserver()
         setListeners()
+    }
+
+    private fun setActivityTypeObserver() {
+        addActivityViewModel.activityType.observe(this, Observer {
+            value_text_layout.hint = when (it) {
+                ACTIVITY_GAME_CONSOLE_BREAK -> getString(R.string.duration)
+                ACTIVITY_COFFEE -> getString(R.string.cups_of_coffee)
+                ACTIVITY_TABLE_TENNIS -> getString(R.string.duration)
+                else -> getString(R.string.value)
+            }
+        })
     }
 
     private fun setActivityTypesDropDown() {
@@ -61,18 +77,21 @@ class AddActivityDialogFragment : DialogFragment(), AddActivityDialogNavigator {
             )
 
         mActivityTypeDropDown.setAdapter(adapter)
+
+        selectFirstItemInDropDown()
+    }
+
+    private fun selectFirstItemInDropDown() {
+        val item = mActivityTypeDropDown.adapter.getItem(0) as String
+        mActivityTypeDropDown.setText(item, false)
+        updateActivityType(item)
     }
 
     private fun setListeners() {
         mActivityTypeDropDown.setOnItemClickListener { adapterView, _, position, _ ->
             val item = adapterView.getItemAtPosition(position) as String
 
-            addActivityViewModel.activityType.postValue(when(item) {
-                resources.getString(R.string.activity_drinking_coffee) -> ACTIVITY_COFFEE
-                resources.getString(R.string.activity_table_tennis) -> ACTIVITY_TABLE_TENNIS
-                resources.getString(R.string.activity_console_game) -> ACTIVITY_GAME_CONSOLE_BREAK
-                else -> throw Exception("Unknown activity selected!")
-            })
+            updateActivityType(item)
         }
 
         mDateEditText.setOnFocusChangeListener { _, hasFocus ->
@@ -82,6 +101,17 @@ class AddActivityDialogFragment : DialogFragment(), AddActivityDialogNavigator {
         mTimeEditText.setOnFocusChangeListener { _, hasFocus ->
             addActivityViewModel.onTimeEditTextClick(hasFocus)
         }
+    }
+
+    private fun updateActivityType(item: String) {
+        addActivityViewModel.activityType.postValue(
+            when (item) {
+                resources.getString(R.string.activity_drinking_coffee) -> ACTIVITY_COFFEE
+                resources.getString(R.string.activity_table_tennis) -> ACTIVITY_TABLE_TENNIS
+                resources.getString(R.string.activity_console_game) -> ACTIVITY_GAME_CONSOLE_BREAK
+                else -> throw Exception("Unknown activity selected!")
+            }
+        )
     }
 
     override fun closeDialog() {

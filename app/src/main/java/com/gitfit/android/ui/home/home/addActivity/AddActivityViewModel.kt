@@ -1,14 +1,14 @@
 package com.gitfit.android.ui.home.home.addActivity
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.prefs.PreferenceProvider
+import com.gitfit.android.data.remote.ResultWrapper
 import com.gitfit.android.data.remote.request.PostActivityRequest
 import com.gitfit.android.repos.ActivityRepository
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.base.BaseViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -56,24 +56,32 @@ class AddActivityViewModel(
         navigator()?.dismissDialog()
     }
 
-    fun onSaveButtonClick() {
+    fun onSaveButtonClick() = viewModelScope.launch{
         saveActivity()
         navigator()?.closeDialog()
     }
 
-    private fun saveActivity() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val user = preferenceProvider.getUser()
-            val activity = Activity(
-                0, user.username, activityType.value!!,
-                dateTime.value!!, value.value!!, value.value!!
-            )
+    private suspend fun saveActivity() {
+        val user = preferenceProvider.getUser()
+        val activity = Activity(
+            0, user.username, activityType.value!!,
+            dateTime.value!!, value.value!!, value.value!!
+        )
 
-            gitFitAPIRepository.saveUserActivity(user.username, user.token,
-                PostActivityRequest.fromActivity(activity))
-            activityRepository.insert(activity)
+        when(gitFitAPIRepository.saveUserActivity(
+            user.username, user.token,
+            PostActivityRequest.fromActivity(activity)
+        )){
+            is ResultWrapper.NetworkConnectivityError -> {
+                navigator()?.showToast("No network connection.")
+            }
+            is ResultWrapper.Success -> {
+                activityRepository.insert(activity)
+            }
+            else -> {
+                navigator()?.showToast("Server connection error.")
+            }
         }
     }
-
 
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.prefs.PreferenceProvider
+import com.gitfit.android.data.remote.ResultWrapper.*
 import com.gitfit.android.data.remote.request.PatchActivityRequest
 import com.gitfit.android.repos.ActivityRepository
 import com.gitfit.android.repos.GitFitAPIRepository
@@ -11,7 +12,6 @@ import com.gitfit.android.ui.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
@@ -77,27 +77,37 @@ class EditActivityViewModel(
         navigator()?.closeDialog()
     }
 
-    private suspend fun patchActivity() =
-        withContext(Dispatchers.IO) {
-            val patchActivityRequest = PatchActivityRequest(
-                activity.id,
-                activity.user,
-                activityType.value!!,
-                dateTime.value!!,
-                value.value!!,
-                value.value!!
-            )
+    private suspend fun patchActivity() {
+        val patchActivityRequest = PatchActivityRequest(
+            activity.id,
+            activity.user,
+            activityType.value!!,
+            dateTime.value!!,
+            value.value!!,
+            value.value!!
+        )
 
-            val patchActivityResponse = gitFitAPIRepository.patchUserActivity(
-                currentUser.username,
-                currentUser.token,
-                activity.id,
-                patchActivityRequest
-            )
+        when(val response = gitFitAPIRepository.patchUserActivity(
+            currentUser.username,
+            currentUser.token,
+            activity.id,
+            patchActivityRequest
+        )){
+            is NetworkConnectivityError -> {
+                navigator()?.showToast("No network connection.")
+            }
+            is Success -> {
+                val patchActivityResponse = response.value
+                val activity = Activity.fromPatchActivityResponse(patchActivityResponse)
 
-            val activity = Activity.fromPatchActivityResponse(patchActivityResponse)
-            activityRepository.insert(activity)
+                activityRepository.insert(activity)
+            }
+            else -> {
+                navigator()?.showToast("Server connection error.")
+            }
         }
+
+    }
 
     fun onDeleteButtonClick() {
         navigator()?.showDeleteDialog()
@@ -108,12 +118,21 @@ class EditActivityViewModel(
         navigator()?.closeDialog()
     }
 
-    private suspend fun deleteActivity() = withContext(Dispatchers.IO) {
-        gitFitAPIRepository.deleteUserActivity(
+    private suspend fun deleteActivity() {
+        when(gitFitAPIRepository.deleteUserActivity(
             currentUser.username,
             currentUser.token,
             activity.id
-        )
-        activityRepository.delete(activity)
+        )){
+            is NetworkConnectivityError -> {
+                navigator()?.showToast("No network connection.")
+            }
+            is Success -> {
+                activityRepository.delete(activity)
+            }
+            else -> {
+                navigator()?.showToast("Server connection error.")
+            }
+        }
     }
 }

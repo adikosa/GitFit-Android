@@ -43,7 +43,7 @@ class JournalViewModel(
 
     private suspend fun loadActivityTypes() {
         when(val response = gitFitAPIRepository.getActivityTypes()) {
-            is NetworkConnectivityError -> withContext(Dispatchers.Main) {
+            is NetworkConnectivityError -> {
                 navigator()?.showToast("No network connection.")
             }
             is Success -> {
@@ -58,15 +58,15 @@ class JournalViewModel(
                     info("Server activity types don't match implemented ones. Make sure you have implemented all activity types!")
                 }
             }
-            else -> withContext(Dispatchers.Main) {
+            else -> {
                 navigator()?.showToast("Server connection error.")
             }
         }
     }
 
-    private suspend fun loadActivities(user: User) = withContext(Dispatchers.IO) {
+    private suspend fun loadActivities(user: User) {
         when(val response = gitFitAPIRepository.getActivities(user.username, user.token)) {
-            is NetworkConnectivityError -> withContext(Dispatchers.Main) {
+            is NetworkConnectivityError -> {
                 navigator()?.showToast("No network connection.")
             }
             is Success -> {
@@ -76,7 +76,7 @@ class JournalViewModel(
 
                 activityRepository.deleteAll()
                 activityRepository.insertList(activities)
-            } else -> withContext(Dispatchers.Main) {
+            } else -> {
                 navigator()?.showToast("Server connection error.")
             }
         }
