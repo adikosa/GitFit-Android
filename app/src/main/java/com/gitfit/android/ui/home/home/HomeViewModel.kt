@@ -2,7 +2,8 @@ package com.gitfit.android.ui.home.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.gitfit.android.AppConstants
+import com.gitfit.android.AppConstants.Companion.ACTIVITY_CODE_ADDITION
+import com.gitfit.android.AppConstants.Companion.ACTIVITY_COFFEE
 import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.data.local.prefs.User
@@ -57,31 +58,36 @@ class HomeViewModel(
         countProgress()
     }
 
-    suspend fun countProgress() {
-        val activities = activityRepository.getAll()
-        val totalLinesOfCode = activities
-            .filter { it.type == AppConstants.ACTIVITY_CODE_ADDITION }
-            .sumBy { it.points }.or(0)
+    private suspend fun countProgress() {
+        countLinesOfCode()
+        countCupsOfCoffee()
 
-        val totalCupsOfCoffee = activities
-            .filter { it.type == AppConstants.ACTIVITY_COFFEE }
-            .sumBy { it.points }.or(0)
-
-        var linesOfCodeProgress = totalLinesOfCode / user.linesOfCodeGoal.toDouble()
-        if (linesOfCodeProgress > 1.0) {
-            linesOfCodeProgress = 1.0
-        }
-
-        var cupsOfCoffeeProgress = totalCupsOfCoffee / user.cupsOfCoffeeGoal.toDouble()
-        if (cupsOfCoffeeProgress > 1.0) {
-            cupsOfCoffeeProgress = 1.0
-        }
+        val linesOfCodeProgress = countPercentage(linesOfCode.value!!, user.linesOfCodeGoal)
+        val cupsOfCoffeeProgress = countPercentage(cupsOfCoffee.value!!, user.cupsOfCoffeeGoal)
 
         val currentProgress = (linesOfCodeProgress + cupsOfCoffeeProgress) * 50
-
         progress.postValue(currentProgress.toInt())
-        linesOfCode.postValue(totalLinesOfCode)
-        cupsOfCoffee.postValue(totalCupsOfCoffee)
+    }
+
+    private suspend fun countLinesOfCode() {
+        val activities = activityRepository.getAllByActivityType(ACTIVITY_CODE_ADDITION)
+        val points = activities.sumBy { it.points }.or(0)
+        linesOfCode.value = points
+    }
+
+    private suspend fun countCupsOfCoffee() {
+        val activities = activityRepository.getAllByActivityType(ACTIVITY_COFFEE)
+        val points = activities.sumBy { it.points }.or(0)
+        cupsOfCoffee.value = points
+    }
+
+    private fun countPercentage(a: Int, b: Int): Double {
+        var percentage = a.toDouble() / b.toDouble()
+        if (percentage > 1.0) {
+            percentage = 1.0
+        }
+
+        return percentage
     }
 
     fun stopLoading() {
@@ -100,5 +106,4 @@ class HomeViewModel(
 
         navigator()!!.navigateToLoginFragment()
     }
-
 }

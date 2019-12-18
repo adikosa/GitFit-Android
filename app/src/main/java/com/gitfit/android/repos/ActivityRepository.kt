@@ -19,5 +19,5 @@ class ActivityRepository(private val activityDao: ActivityDao) {
 
     suspend fun getAll() = activityDao.getAll()
 
-
+    suspend fun getAllByActivityType(activityType: String) = activityDao.getAllByActivityType(activityType)
 }

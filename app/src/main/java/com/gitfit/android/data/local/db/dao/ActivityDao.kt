@@ -12,6 +12,9 @@ interface ActivityDao {
     @Query("SELECT * FROM activities")
     suspend fun getAll(): List<Activity>
 
+    @Query("SELECT * FROM activities where type = :activityType")
+    suspend fun getAllByActivityType(activityType: String): List<Activity>
+
     @Query("SELECT * FROM activities")
     fun getLiveData(): LiveData<List<Activity>>
 
@@ -26,5 +29,7 @@ interface ActivityDao {
 
     @Query("DELETE FROM activities")
     suspend fun deleteAll()
+
+
 
 }

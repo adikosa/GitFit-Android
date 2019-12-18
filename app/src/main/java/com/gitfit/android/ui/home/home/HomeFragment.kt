@@ -50,12 +50,6 @@ class HomeFragment : BaseFragment(), HomeNavigator {
         homeViewModel.init()
 
         homeViewModel.progress.observe(this, Observer {
-            println("curr")
-            println(mArcProgress.progress)
-
-            println("a")
-            println(it)
-
             if (mArcProgress.progress != it) {
                 val animator = ObjectAnimator.ofInt(mArcProgress, "progress", mArcProgress.progress, it)
                 animator.apply {

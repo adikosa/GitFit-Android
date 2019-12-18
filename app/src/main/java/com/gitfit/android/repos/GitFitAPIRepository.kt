@@ -35,8 +35,6 @@ class GitFitAPIRepository(
                     is IOException -> ResultWrapper.NetworkError
                     else -> ResultWrapper.GenericError(null)
                 }
-
-
             }
         }
     }
