@@ -6,17 +6,16 @@ import com.gitfit.android.AppConstants
 import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.data.local.prefs.User
+import com.gitfit.android.data.remote.ResultWrapper
 import com.gitfit.android.repos.ActivityRepository
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.base.BaseViewModel
 import kotlinx.coroutines.*
-import java.lang.ref.WeakReference
-import java.util.*
 
 class HomeViewModel(
     private val activityRepository: ActivityRepository,
     private val gitFitAPIRepository: GitFitAPIRepository,
-    preferenceProvider: PreferenceProvider
+    private val preferenceProvider: PreferenceProvider
 ) : BaseViewModel<HomeNavigator>() {
 
     private var job: Job
@@ -26,6 +25,10 @@ class HomeViewModel(
     var progress = MutableLiveData(0)
 
     init {
+        if (!preferenceProvider.userExists()) {
+            signOut()
+        }
+
         job = viewModelScope.launch {
             setLoading(true)
             loadProgress()
@@ -34,29 +37,32 @@ class HomeViewModel(
     }
 
     private suspend fun loadProgress() = withContext(Dispatchers.IO) {
-        val activitiesResponse =
-            gitFitAPIRepository.getActivities(user.username, user.token)
+        when(val response = gitFitAPIRepository.getActivities(user.username, user.token)) {
+            is ResultWrapper.NetworkConnectivityError -> println('A')
+            is ResultWrapper.GenericError -> println('B')
+            is ResultWrapper.NetworkError -> println('C')
+            is ResultWrapper.Success -> {
+                val activitiesResponse = response.value
+                val activities = Activity.fromActivitiesResponse(activitiesResponse)
 
-        activitiesResponse?.let { ar ->
-            val activities = Activity.fromActivitiesResponse(ar)
+                val totalLinesOfCode = activities
+                    .filter { it.type == AppConstants.ACTIVITY_CODE_ADDITION }
+                    .sumBy { it.points }.or(0)
 
-            val totalLinesOfCode = activities
-                .filter { it.type == AppConstants.ACTIVITY_CODE_ADDITION }
-                .sumBy { it.points }.or(0)
+                val totalCupsOfCoffee = activities
+                    .filter { it.type == AppConstants.ACTIVITY_COFFEE }
+                    .sumBy { it.points }.or(0)
 
-            val totalCupsOfCoffee = activities
-                .filter { it.type == AppConstants.ACTIVITY_COFFEE }
-                .sumBy { it.points }.or(0)
+                val currentProgress = ((totalLinesOfCode / user.linesOfCodeGoal.toDouble()) +
+                        (totalCupsOfCoffee / user.cupsOfCoffeeGoal.toDouble())) * 50
 
-            val currentProgress = ((totalLinesOfCode / user.linesOfCodeGoal.toDouble()) +
-                    (totalCupsOfCoffee / user.cupsOfCoffeeGoal.toDouble())) * 50
+                progress.postValue(currentProgress.toInt())
+                linesOfCode.postValue(totalLinesOfCode)
+                cupsOfCoffee.postValue(totalCupsOfCoffee)
 
-            progress.postValue(currentProgress.toInt())
-            linesOfCode.postValue(totalLinesOfCode)
-            cupsOfCoffee.postValue(totalCupsOfCoffee)
-
-            activityRepository.deleteAll()
-            activityRepository.insertList(activities)
+                activityRepository.deleteAll()
+                activityRepository.insertList(activities)
+            }
         }
     }
 
@@ -66,6 +72,15 @@ class HomeViewModel(
 
     fun onAddActivityClick() {
         navigator()?.openNewActivityDialog()
+    }
+
+    private fun signOut() {
+        preferenceProvider.removeUser()
+        viewModelScope.launch {
+            activityRepository.deleteAll()
+        }
+
+        navigator()!!.navigateToLoginFragment()
     }
 
 }

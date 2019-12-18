@@ -21,7 +21,7 @@ import org.koin.dsl.module
 val appModule = module {
 
     single { RetrofitClient() }
-    single { get<RetrofitClient>().getGitFitService() }
+    single { get<RetrofitClient>().getGitFitService(androidApplication().applicationContext) }
 
     single { PreferenceProvider(androidApplication().applicationContext) }
 

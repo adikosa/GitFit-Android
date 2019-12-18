@@ -3,6 +3,8 @@ package com.gitfit.android.ui.login
 import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.data.remote.response.GithubTokenResponse
 import com.gitfit.android.data.local.prefs.User
+import com.gitfit.android.data.remote.ResultWrapper
+import com.gitfit.android.data.remote.ResultWrapper.*
 import com.gitfit.android.data.remote.response.UserAuthResponse
 import com.gitfit.android.data.remote.request.UserLoginRequest
 import com.gitfit.android.repos.GitFitAPIRepository
@@ -11,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class LoginViewModel(
     private val gitFitAPIRepository: GitFitAPIRepository,
@@ -28,7 +31,12 @@ class LoginViewModel(
         setLoading(true)
 
         CoroutineScope(Dispatchers.IO).launch {
-            githubTokenResponse = gitFitAPIRepository.getGithubToken(code)
+            when (val response = gitFitAPIRepository.getGithubToken(code)) {
+                is NetworkConnectivityError -> println('A')
+                is GenericError -> println('B')
+                is NetworkError -> println('C')
+                is Success -> githubTokenResponse = response.value
+            }
 
             val userResponse =
                 gitFitAPIRepository.getUser(githubTokenResponse!!.username)

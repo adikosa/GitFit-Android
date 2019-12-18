@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.gitfit.android.R
 import com.gitfit.android.databinding.FragmentHomeBinding
 import com.gitfit.android.ui.base.BaseFragment
+import com.gitfit.android.utils.navigateWithoutComingBack
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -56,6 +57,10 @@ class HomeFragment : BaseFragment(), HomeNavigator {
 
     override fun openNewActivityDialog() {
         findNavController().navigate(R.id.action_navigation_home_to_navigation_add_activity)
+    }
+
+    override fun navigateToLoginFragment() {
+        findNavController().navigateWithoutComingBack(R.id.nav_graph_auth)
     }
 
     override fun onDestroyView() {

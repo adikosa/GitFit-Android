@@ -14,9 +14,13 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.R
+import com.gitfit.android.data.remote.ResultWrapper
+import com.gitfit.android.data.remote.ResultWrapper.Success
 import com.gitfit.android.databinding.ActivityMainBinding
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.login.LoginFragment
+import com.gitfit.android.utils.debug
+import com.gitfit.android.utils.isNetworkConnected
 import com.gitfit.android.utils.navigateWithoutComingBack
 import com.gitfit.android.utils.showToast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -51,11 +55,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun isNetworkConnected(): Boolean {
-        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnected
-    }
-
     private fun setupBottomNavView() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.parent!!.id == R.id.nav_graph_main)
@@ -71,22 +70,25 @@ class MainActivity : AppCompatActivity() {
         if (preferences.userExists()) {
             val user = preferences.getUser()
 
-            val handler = CoroutineExceptionHandler { _, _ ->
-                CoroutineScope(Dispatchers.Main).launch {
-                    showToast("Server connection error")
-                }
-            }
+            println("DUPA1")
 
-            CoroutineScope(Dispatchers.IO).launch(handler) {
-                if (gitFitAPIRepository.isTokenValid(user.username, user.token)) {
-                    withContext(Dispatchers.Main) {
-                        navController.navigateWithoutComingBack(R.id.nav_graph_main)
-                    }
-                } else {
+            CoroutineScope(Dispatchers.IO).launch {
+                println("DUPA2")
+                if (gitFitAPIRepository.isTokenValid(user.username, user.token) is Success) {
+                    println("DUPA3")
                     preferences.removeUser()
+                }
+
+                println("DUPA4")
+                withContext(Dispatchers.Main) {
+                    navigateToHome()
                 }
             }
         }
+    }
+
+    private fun navigateToHome() {
+        navController.navigateWithoutComingBack(R.id.nav_graph_main)
     }
 
     override fun onNewIntent(intent: Intent?) {

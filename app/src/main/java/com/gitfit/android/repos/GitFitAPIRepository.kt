@@ -1,21 +1,58 @@
 package com.gitfit.android.repos
 
-import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.db.entity.ActivityType
 import com.gitfit.android.data.remote.GitFitApiService
+import com.gitfit.android.data.remote.NoConnectivityException
+import com.gitfit.android.data.remote.ResultWrapper
 import com.gitfit.android.data.remote.request.*
 import com.gitfit.android.data.remote.response.ActivityResponse
+import com.gitfit.android.data.remote.response.GithubTokenResponse
 import com.gitfit.android.data.remote.response.UserResponse
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.io.IOException
 
-class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
+class GitFitAPIRepository(
+    private val gitFitApiService: GitFitApiService,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
     companion object {
         const val AUTH_HEADER_PREFIX = "Bearer "
     }
 
-    suspend fun getGithubToken(code: String) =
-        gitFitApiService.getGithubOauthToken(code, "randomState")
+    private suspend fun <T> safeApiCall(dispatcher: CoroutineDispatcher, apiCall: suspend () -> T): ResultWrapper<T> {
+        return withContext(dispatcher) {
+            try {
+                ResultWrapper.Success(apiCall.invoke())
+            } catch (throwable: Throwable) {
+                when (throwable) {
+                    is NoConnectivityException -> ResultWrapper.NetworkConnectivityError
+                    is HttpException -> ResultWrapper.GenericError(throwable.code())
+                    is IOException -> ResultWrapper.NetworkError
+                    else -> ResultWrapper.GenericError(null)
+                }
+            }
+        }
+    }
+
+    suspend fun getGithubToken(code: String): ResultWrapper<GithubTokenResponse> {
+        return safeApiCall(dispatcher) {
+            gitFitApiService.getGithubOauthToken(code, "randomState")
+        }
+    }
+
+    suspend fun isTokenValid(username: String, token: String): ResultWrapper<Boolean> {
+        return safeApiCall(dispatcher) {
+            gitFitApiService.getUserWithAuthorization(
+                username,
+                AUTH_HEADER_PREFIX + token
+            )
+
+            true
+        }
+    }
 
     suspend fun getUser(username: String): UserResponse? {
         return try {
@@ -30,19 +67,12 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
         }
     }
 
-    suspend fun getActivities(username: String, token: String): List<ActivityResponse>? {
-        return try {
+    suspend fun getActivities(username: String, token: String): ResultWrapper<List<ActivityResponse>> {
+        return safeApiCall(dispatcher) {
             gitFitApiService.getActivities(
                 username,
                 AUTH_HEADER_PREFIX + token
             )
-        } catch (httpException: HttpException) {
-            val responseCode = httpException.code()
-            if (responseCode == 404) {
-                null
-            } else {
-                throw httpException
-            }
         }
     }
 
@@ -67,18 +97,6 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
         gitFitApiService.updateUser(
             username, AUTH_HEADER_PREFIX + token, patchUserRequest
         )
-    }
-
-    suspend fun isTokenValid(username: String, token: String): Boolean {
-        return try {
-            gitFitApiService.getUserWithAuthorization(
-                username,
-                AUTH_HEADER_PREFIX + token
-            )
-            true
-        } catch (httpException: HttpException) {
-            false
-        }
     }
 
     suspend fun logInUser(userLoginRequest: UserLoginRequest) =

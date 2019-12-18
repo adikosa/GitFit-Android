@@ -5,6 +5,7 @@ import com.gitfit.android.AppConstants.Companion.ACTIVITY_TYPES
 import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.data.local.prefs.User
+import com.gitfit.android.data.remote.ResultWrapper
 import com.gitfit.android.repos.ActivityRepository
 import com.gitfit.android.repos.ActivityTypeRepository
 import com.gitfit.android.repos.GitFitAPIRepository
@@ -53,15 +54,19 @@ class JournalViewModel(
         }
     }
 
-    private suspend fun loadActivities(currentUser: User) = withContext(Dispatchers.IO) {
-        val activities =
-            gitFitAPIRepository.getActivities(currentUser.username, currentUser.token)
-                ?.filter { ACTIVITY_TYPES.contains(it.type) }
-                ?.map { a -> Activity.fromActivityResponse(a) }
+    private suspend fun loadActivities(user: User) = withContext(Dispatchers.IO) {
+        when(val response = gitFitAPIRepository.getActivities(user.username, user.token)) {
+            is ResultWrapper.NetworkConnectivityError -> println('A')
+            is ResultWrapper.GenericError -> println('B')
+            is ResultWrapper.NetworkError -> println('C')
+            is ResultWrapper.Success -> {
+                val activities = response.value
+                    .filter { ACTIVITY_TYPES.contains(it.type) }
+                    .map { a -> Activity.fromActivityResponse(a) }
 
-        activities?.let {
-            activityRepository.deleteAll()
-            activityRepository.insertList(activities)
+                activityRepository.deleteAll()
+                activityRepository.insertList(activities)
+            }
         }
     }
 
