@@ -85,11 +85,12 @@ class GitFitAPIRepository(
     suspend fun updateUser(
         username: String,
         patchUserRequest: PatchUserRequest,
-        token: String
-    ) {
-        gitFitApiService.updateUser(
-            username, AUTH_HEADER_PREFIX + token, patchUserRequest
-        )
+        token: String): ResultWrapper<UserResponse> {
+        return safeApiCall(dispatcher) {
+            gitFitApiService.updateUser(
+                username, AUTH_HEADER_PREFIX + token, patchUserRequest
+            )
+        }
     }
 
     suspend fun logInUser(userLoginRequest: UserLoginRequest) =

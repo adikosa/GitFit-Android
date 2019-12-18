@@ -5,4 +5,6 @@ sealed class ResultWrapper<out T> {
     data class GenericError(val code: Int? = null): ResultWrapper<Nothing>()
     object NetworkConnectivityError: ResultWrapper<Nothing>()
     object NetworkError: ResultWrapper<Nothing>()
+
+    // TODO: 401, 403, 404 etc.
 }
