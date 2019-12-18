@@ -89,8 +89,8 @@ class EditActivityViewModel(
             )
 
             val patchActivityResponse = gitFitAPIRepository.patchUserActivity(
-                currentUser.username!!,
-                currentUser.token!!,
+                currentUser.username,
+                currentUser.token,
                 activity.id,
                 patchActivityRequest
             )
@@ -110,8 +110,8 @@ class EditActivityViewModel(
 
     private suspend fun deleteActivity() = withContext(Dispatchers.IO) {
         gitFitAPIRepository.deleteUserActivity(
-            currentUser.username!!,
-            currentUser.token!!,
+            currentUser.username,
+            currentUser.token,
             activity.id
         )
         activityRepository.delete(activity)

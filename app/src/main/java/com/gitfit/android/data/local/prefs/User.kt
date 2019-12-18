@@ -3,12 +3,12 @@ package com.gitfit.android.data.local.prefs
 import com.gitfit.android.data.remote.response.UserAuthResponse
 
 class User(
-    var firstName: String? = null,
-    var lastName: String? = null,
-    var username: String? = null,
-    var token: String? = null,
-    var linesOfCodeGoal: String? = null,
-    var cupsOfCoffeeGoal: String? = null) {
+    var firstName: String = "",
+    var lastName: String = "",
+    var username: String = "",
+    var token: String = "",
+    var linesOfCodeGoal: Int,
+    var cupsOfCoffeeGoal: Int) {
 
     companion object {
         fun fromAuthResponse(userAuthResponse: UserAuthResponse): User {
@@ -17,8 +17,8 @@ class User(
                 userAuthResponse.lastName,
                 userAuthResponse.username,
                 userAuthResponse.token,
-                userAuthResponse.linesOfCodeGoal.toString(),
-                userAuthResponse.cupsOfCoffeeGoal.toString()
+                userAuthResponse.linesOfCodeGoal,
+                userAuthResponse.cupsOfCoffeeGoal
             )
         }
     }

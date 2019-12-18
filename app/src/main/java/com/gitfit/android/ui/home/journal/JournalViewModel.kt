@@ -55,7 +55,7 @@ class JournalViewModel(
 
     private suspend fun loadActivities(currentUser: User) = withContext(Dispatchers.IO) {
         val activities =
-            gitFitAPIRepository.getActivities(currentUser.username!!, currentUser.token!!)
+            gitFitAPIRepository.getActivities(currentUser.username, currentUser.token)
                 ?.filter { ACTIVITY_TYPES.contains(it.type) }
                 ?.map { a -> Activity.fromActivityResponse(a) }
 

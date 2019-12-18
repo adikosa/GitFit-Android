@@ -16,8 +16,8 @@ class RegisterViewModel(
 ) : BaseViewModel<RegisterNavigator>() {
 
     val user = User(
-        linesOfCodeGoal = "200",
-        cupsOfCoffeeGoal = "5"
+        linesOfCodeGoal = 200,
+        cupsOfCoffeeGoal = 5
     )
 
     fun onRegisterButtonClick() {

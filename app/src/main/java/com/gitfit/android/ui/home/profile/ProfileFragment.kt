@@ -67,7 +67,7 @@ class ProfileFragment : BaseFragment(), ProfileNavigator {
 
     override fun openProfileAlertDialog() {
         val profileAlertDialog = AlertDialog.Builder(context!!)
-            .setItems(arrayOf("Sign Out")) { _, _ ->
+            .setItems(arrayOf(resources.getString(R.string.sign_out))) { _, _ ->
                 profileViewModel.signOut()
             }.create()
 
@@ -78,7 +78,7 @@ class ProfileFragment : BaseFragment(), ProfileNavigator {
         val infoAlertDialog = AlertDialog.Builder(context!!)
             .setTitle("GitFit Authors")
             .setMessage("Patryk Marciszek-Kosieradzki\nAdrian Twarowski")
-            .setPositiveButton("OK") { dialog, _ ->
+            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ ->
                 dialog.cancel()
             }
             .create()
@@ -89,7 +89,7 @@ class ProfileFragment : BaseFragment(), ProfileNavigator {
     override fun openSettings() {
         val settingsAlertDialog = AlertDialog.Builder(context!!)
             .setTitle("Not Implemented Yet")
-            .setPositiveButton("OK") { dialog, _ ->
+            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ ->
                 dialog.cancel()
             }
             .create()

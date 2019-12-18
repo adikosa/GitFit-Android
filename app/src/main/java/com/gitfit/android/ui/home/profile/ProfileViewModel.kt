@@ -33,9 +33,9 @@ class ProfileViewModel(
 
         CoroutineScope(Dispatchers.IO).launch {
             gitFitAPIRepository.updateUser(
-                user.username!!,
+                user.username,
                 PatchUserRequest.fromUser(user),
-                user.token!!
+                user.token
             )
         }
     }

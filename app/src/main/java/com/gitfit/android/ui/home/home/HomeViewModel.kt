@@ -16,7 +16,7 @@ import java.util.*
 class HomeViewModel(
     private val activityRepository: ActivityRepository,
     private val gitFitAPIRepository: GitFitAPIRepository,
-    private val preferenceProvider: PreferenceProvider
+    preferenceProvider: PreferenceProvider
 ) : BaseViewModel<HomeNavigator>() {
 
     private var job: Job
@@ -33,9 +33,9 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun loadProgress() = runBlocking(Dispatchers.IO) {
+    private suspend fun loadProgress() = withContext(Dispatchers.IO) {
         val activitiesResponse =
-            gitFitAPIRepository.getActivities(user.username!!, user.token!!)
+            gitFitAPIRepository.getActivities(user.username, user.token)
 
         activitiesResponse?.let { ar ->
             val activities = Activity.fromActivitiesResponse(ar)
@@ -48,8 +48,8 @@ class HomeViewModel(
                 .filter { it.type == AppConstants.ACTIVITY_COFFEE }
                 .sumBy { it.points }
 
-            val currentProgress = ((totalLinesOfCode / user.linesOfCodeGoal!!.toDouble()) +
-                    (totalCupsOfCoffee / user.cupsOfCoffeeGoal!!.toDouble())) * 50
+            val currentProgress = ((totalLinesOfCode / user.linesOfCodeGoal.toDouble()) +
+                    (totalCupsOfCoffee / user.cupsOfCoffeeGoal.toDouble())) * 50
 
             progress.postValue(currentProgress.toInt())
             linesOfCode.postValue(totalLinesOfCode)

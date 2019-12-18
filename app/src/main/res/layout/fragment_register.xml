@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="com.gitfit.android.ui.DataBindingConverters" />
         <variable
             name="viewModel"
             type="com.gitfit.android.ui.register.RegisterViewModel" />
@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:text="@={viewModel.user.linesOfCodeGoal}" />
+                android:text="@={DataBindingConverters.convertIntToString(viewModel.user.linesOfCodeGoal)}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:text="@={viewModel.user.cupsOfCoffeeGoal}" />
+                android:text="@={DataBindingConverters.convertIntToString(viewModel.user.cupsOfCoffeeGoal)}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

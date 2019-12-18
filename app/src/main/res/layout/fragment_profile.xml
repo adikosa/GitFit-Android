@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.gitfit.android.ui.DataBindingConverters" />
         <variable
             name="viewModel"
             type="com.gitfit.android.ui.home.profile.ProfileViewModel" />
@@ -150,7 +151,7 @@
                             android:id="@+id/mLinesOfCodeEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@={viewModel.user.linesOfCodeGoal}"
+                            android:text="@={DataBindingConverters.convertIntToString(viewModel.user.linesOfCodeGoal)}"
                             android:inputType="number" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -171,7 +172,7 @@
                             android:id="@+id/mCupsOfCoffeeEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@={viewModel.user.cupsOfCoffeeGoal}"
+                            android:text="@={DataBindingConverters.convertIntToString(viewModel.user.cupsOfCoffeeGoal)}"
                             android:inputType="number" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -222,7 +223,7 @@
                             android:id="@+id/first_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@={viewModel.user.linesOfCodeGoal}"
+                            android:text="@={DataBindingConverters.convertIntToString(viewModel.user.linesOfCodeGoal)}"
                             android:inputType="number" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -243,7 +244,7 @@
                             android:id="@+id/second_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@={viewModel.user.cupsOfCoffeeGoal}"
+                            android:text="@={DataBindingConverters.convertIntToString(viewModel.user.cupsOfCoffeeGoal)}"
                             android:inputType="number" />
 
                     </com.google.android.material.textfield.TextInputLayout>

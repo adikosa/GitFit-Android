@@ -31,24 +31,24 @@ class PreferenceProvider(
             putString(PREFERENCE_LAST_NAME, user.lastName)
             putString(PREFERENCE_USERNAME, user.username)
             putString(PREFERENCE_TOKEN, user.token)
-            putString(PREFERENCE_LINES_OF_CODE_GOAL, user.linesOfCodeGoal)
-            putString(PREFERENCE_CUPS_OF_COFFEE_GOAL, user.cupsOfCoffeeGoal)
+            putInt(PREFERENCE_LINES_OF_CODE_GOAL, user.linesOfCodeGoal)
+            putInt(PREFERENCE_CUPS_OF_COFFEE_GOAL, user.cupsOfCoffeeGoal)
         }
     }
 
     fun getUser(): User {
-        val firstName = preferences.getString(PREFERENCE_FIRST_NAME, null)
-        val lastName = preferences.getString(PREFERENCE_LAST_NAME, null)
-        val username = preferences.getString(PREFERENCE_USERNAME, null)
-        val token = preferences.getString(PREFERENCE_TOKEN, null)
-        val linesOfCodeGoal = preferences.getString(PREFERENCE_LINES_OF_CODE_GOAL, null)
-        val cupsOfCoffeeGoal = preferences.getString(PREFERENCE_CUPS_OF_COFFEE_GOAL, null)
+        val firstName = preferences.getString(PREFERENCE_FIRST_NAME, "")
+        val lastName = preferences.getString(PREFERENCE_LAST_NAME, "")
+        val username = preferences.getString(PREFERENCE_USERNAME, "")
+        val token = preferences.getString(PREFERENCE_TOKEN, "")
+        val linesOfCodeGoal = preferences.getInt(PREFERENCE_LINES_OF_CODE_GOAL, 0)
+        val cupsOfCoffeeGoal = preferences.getInt(PREFERENCE_CUPS_OF_COFFEE_GOAL, 0)
 
         return User(
-            firstName,
-            lastName,
-            username,
-            token,
+            firstName!!,
+            lastName!!,
+            username!!,
+            token!!,
             linesOfCodeGoal,
             cupsOfCoffeeGoal
         )

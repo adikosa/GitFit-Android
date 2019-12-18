@@ -36,5 +36,6 @@
     <string name="delete_dialog_message">Are you sure, you want to delete this activity?</string>
     <string name="yes_button">yes</string>
     <string name="no_button">no</string>
-
+    <string name="ok">OK</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

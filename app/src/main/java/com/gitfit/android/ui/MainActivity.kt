@@ -71,14 +71,14 @@ class MainActivity : AppCompatActivity() {
         if (preferences.userExists()) {
             val user = preferences.getUser()
 
-            val handler = CoroutineExceptionHandler { _, exception ->
+            val handler = CoroutineExceptionHandler { _, _ ->
                 CoroutineScope(Dispatchers.Main).launch {
                     showToast("Server connection error")
                 }
             }
 
             CoroutineScope(Dispatchers.IO).launch(handler) {
-                if (gitFitAPIRepository.isTokenValid(user.username!!, user.token!!)) {
+                if (gitFitAPIRepository.isTokenValid(user.username, user.token)) {
                     withContext(Dispatchers.Main) {
                         navController.navigateWithoutComingBack(R.id.nav_graph_main)
                     }
