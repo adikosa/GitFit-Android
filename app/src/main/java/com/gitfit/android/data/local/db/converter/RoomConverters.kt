@@ -5,7 +5,7 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 
-class Converters {
+class RoomConverters {
 
     @TypeConverter
     fun fromTimestamp(value: Long?): LocalDateTime? {

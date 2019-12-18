@@ -1,4 +1,4 @@
-package com.gitfit.android.ui.home.journal.editactivity
+package com.gitfit.android.ui.home.journal.editActivity
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope

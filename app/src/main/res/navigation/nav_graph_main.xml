@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_main"
-    app:startDestination="@id/navigation_home">
+    app:startDestination="@id/navigation_home"
+    tools:ignore="UnusedNavigation">
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.gitfit.android.ui.home.home.HomeFragment"
@@ -15,7 +16,7 @@
     </fragment>
     <dialog
         android:id="@+id/navigation_add_activity"
-        android:name="com.gitfit.android.ui.home.home.add_activity.AddActivityDialogFragment"
+        android:name="com.gitfit.android.ui.home.home.addActivity.AddActivityDialogFragment"
         tools:layout="@layout/fragment_dialog_add_activity"
         android:label="AddActivityDialogFragment" />
     <fragment
@@ -29,7 +30,7 @@
     </fragment>
     <dialog
         android:id="@+id/navigation_edit_activity"
-        android:name="com.gitfit.android.ui.home.journal.editactivity.EditActivityDialogFragment"
+        android:name="com.gitfit.android.ui.home.journal.editActivity.EditActivityDialogFragment"
         tools:layout="@layout/fragment_dialog_edit_activity" >
         <argument
             android:name="activityId"

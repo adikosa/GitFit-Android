@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.gitfit.android.ui.DataBindingConverters" />
         <variable
             name="viewModel"
-            type="com.gitfit.android.ui.home.home.add_activity.AddActivityViewModel" />
+            type="com.gitfit.android.ui.home.home.addActivity.AddActivityViewModel" />
     </data>
 
     <LinearLayout
@@ -14,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="15dp"
-        tools:context=".ui.home.journal.editactivity.EditActivityDialogFragment">
+        tools:context=".ui.home.journal.editActivity.EditActivityDialogFragment">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/filled_exposed_dropdown_menu"
@@ -46,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:text="@{viewModel.toString()}" />
+                android:text="@={DataBindingConverters.convertIntToString(viewModel.value)}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

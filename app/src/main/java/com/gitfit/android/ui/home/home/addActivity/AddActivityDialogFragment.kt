@@ -1,4 +1,4 @@
-package com.gitfit.android.ui.home.home.add_activity
+package com.gitfit.android.ui.home.home.addActivity
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

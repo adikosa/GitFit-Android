@@ -3,7 +3,8 @@ package com.gitfit.android.ui
 import androidx.databinding.InverseMethod
 
 
-object Converters {
+object DataBindingConverters {
+
     @JvmStatic
     fun convertStringToInt(text: String): Int {
         return try {

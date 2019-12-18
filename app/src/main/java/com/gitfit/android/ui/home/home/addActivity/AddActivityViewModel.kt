@@ -1,4 +1,4 @@
-package com.gitfit.android.ui.home.home.add_activity
+package com.gitfit.android.ui.home.home.addActivity
 
 import androidx.lifecycle.MutableLiveData
 import com.gitfit.android.ui.base.BaseViewModel

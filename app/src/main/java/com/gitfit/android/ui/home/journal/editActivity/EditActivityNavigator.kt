@@ -1,4 +1,4 @@
-package com.gitfit.android.ui.home.journal.editactivity
+package com.gitfit.android.ui.home.journal.editActivity
 
 interface EditActivityNavigator {
     fun showDatePicker(year: Int, month: Int, dayOfMonth: Int)
