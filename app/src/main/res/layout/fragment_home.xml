@@ -140,6 +140,7 @@
                                 </LinearLayout>
 
                                 <TextView
+                                    android:id="@+id/lines_of_code_text"
                                     android:layout_marginTop="-8dp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -161,7 +162,7 @@
                             android:background="@color/light_grey"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/about_you_text" />
+                            app:layout_constraintTop_toBottomOf="@id/lines_of_code_text" />
 
                         <Space
                             android:layout_width="15dp"
