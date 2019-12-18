@@ -12,7 +12,7 @@ data class Activity(
     val user: String,
     val type: String,
     val timestamp: LocalDateTime,
-    val duration: Int?,
+    val duration: Int,
     val points: Int
 ) {
     companion object {

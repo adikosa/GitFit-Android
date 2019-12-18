@@ -2,7 +2,7 @@ package com.gitfit.android.data.remote.response
 
 import org.threeten.bp.LocalDateTime
 
-data class PatchActivityResponse (
+data class PostActivityResponse(
     val id: Long,
     val user: String,
     val type: String,

@@ -25,7 +25,7 @@
             android:hint="@string/activity_type">
 
             <AutoCompleteTextView
-                android:id="@+id/filled_exposed_dropdown"
+                android:id="@+id/mActivityTypeDropDown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:editable="false"
@@ -43,7 +43,7 @@
             android:hint="@string/value">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/value_edit_text"
+                android:id="@+id/mValueEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -67,12 +67,12 @@
                 android:hint="@string/date">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/date_edit_text"
+                    android:id="@+id/mDateEditText"
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:cursorVisible="false"
                     android:editable="false"
-                    android:onClick="@{() -> viewModel.onDateLayoutClick(true)}"
+                    android:onClick="@{() -> viewModel.onDateEditTextClick(true)}"
                     android:text="@{viewModel.dateTime.format(viewModel.dateFormatter)}"
                     tools:ignore="Deprecated" />
 
@@ -92,12 +92,12 @@
                 android:hint="@string/time">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/time_edit_text"
+                    android:id="@+id/mTimeEditText"
                     android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:cursorVisible="false"
                     android:editable="false"
-                    android:onClick="@{() -> viewModel.onTimeLayoutClick(true)}"
+                    android:onClick="@{() -> viewModel.onTimeEditTextClick(true)}"
                     android:text="@{viewModel.dateTime.format(viewModel.timeFormatter)}"
                     tools:ignore="Deprecated" />
 

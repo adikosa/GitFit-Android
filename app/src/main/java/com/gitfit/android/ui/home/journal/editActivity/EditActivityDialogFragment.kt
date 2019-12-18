@@ -23,6 +23,7 @@ import org.koin.core.parameter.parametersOf
 
 
 class EditActivityDialogFragment : DialogFragment(), EditActivityNavigator {
+
     private val viewModel: EditActivityViewModel by viewModel { parametersOf(arguments!!.getLong("activityId")) }
 
     private val activities by lazy {
@@ -79,7 +80,7 @@ class EditActivityDialogFragment : DialogFragment(), EditActivityNavigator {
             else -> throw Exception("Unknown activity!")
         }
 
-        filled_exposed_dropdown.setText(activityTypeResId)
+        mActivityTypeDropDown.setText(activityTypeResId)
 
         val adapter = ArrayAdapter(
             context!!,
@@ -87,11 +88,11 @@ class EditActivityDialogFragment : DialogFragment(), EditActivityNavigator {
             sortedActivities
         )
 
-        filled_exposed_dropdown.setAdapter(adapter)
+        mActivityTypeDropDown.setAdapter(adapter)
     }
 
     private fun setListeners() {
-        filled_exposed_dropdown.setOnItemClickListener { _, _, position, _ ->
+        mActivityTypeDropDown.setOnItemClickListener { _, _, position, _ ->
             viewModel.activityType.value = when (sortedActivities[position]) {
                 activities[0] -> ACTIVITY_GAME_CONSOLE_BREAK
                 activities[1] -> ACTIVITY_COFFEE
@@ -100,11 +101,11 @@ class EditActivityDialogFragment : DialogFragment(), EditActivityNavigator {
             }
         }
 
-        date_edit_text.setOnFocusChangeListener { _, hasFocus ->
+        mDateEditText.setOnFocusChangeListener { _, hasFocus ->
             viewModel.onDateLayoutClick(hasFocus)
         }
 
-        time_edit_text.setOnFocusChangeListener { _, hasFocus ->
+        mTimeEditText.setOnFocusChangeListener { _, hasFocus ->
             viewModel.onTimeLayoutClick(hasFocus)
         }
     }

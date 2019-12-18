@@ -38,4 +38,5 @@
     <string name="no_button">no</string>
     <string name="ok">OK</string>
     <string name="sign_out">Sign Out</string>
+    <string name="slash">/</string>
 </resources>

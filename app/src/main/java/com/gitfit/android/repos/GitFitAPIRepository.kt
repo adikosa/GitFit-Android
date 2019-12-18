@@ -3,10 +3,7 @@ package com.gitfit.android.repos
 import com.gitfit.android.data.local.db.entity.Activity
 import com.gitfit.android.data.local.db.entity.ActivityType
 import com.gitfit.android.data.remote.GitFitApiService
-import com.gitfit.android.data.remote.request.PatchActivityRequest
-import com.gitfit.android.data.remote.request.PatchUserRequest
-import com.gitfit.android.data.remote.request.UserLoginRequest
-import com.gitfit.android.data.remote.request.UserRegisterRequest
+import com.gitfit.android.data.remote.request.*
 import com.gitfit.android.data.remote.response.ActivityResponse
 import com.gitfit.android.data.remote.response.UserResponse
 import retrofit2.HttpException
@@ -95,5 +92,9 @@ class GitFitAPIRepository(private val gitFitApiService: GitFitApiService) {
 
     suspend fun patchUserActivity(username: String, token: String, activityId: Long, patchActivityRequest: PatchActivityRequest) =
         gitFitApiService.patchUserActivity(username, AUTH_HEADER_PREFIX + token, activityId, patchActivityRequest)
+
+    suspend fun saveUserActivity(username: String, token: String, postActivityRequest: PostActivityRequest) {
+        gitFitApiService.saveUserActivity(username, AUTH_HEADER_PREFIX + token, postActivityRequest)
+    }
 
 }

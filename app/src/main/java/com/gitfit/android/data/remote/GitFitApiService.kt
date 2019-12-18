@@ -1,15 +1,8 @@
 package com.gitfit.android.data.remote
 
 import com.gitfit.android.data.local.db.entity.ActivityType
-import com.gitfit.android.data.remote.request.PatchActivityRequest
-import com.gitfit.android.data.remote.request.PatchUserRequest
-import com.gitfit.android.data.remote.request.UserLoginRequest
-import com.gitfit.android.data.remote.request.UserRegisterRequest
-import com.gitfit.android.data.remote.response.ActivityResponse
-import com.gitfit.android.data.remote.response.GithubTokenResponse
-import com.gitfit.android.data.remote.response.PatchActivityResponse
-import com.gitfit.android.data.remote.response.UserAuthResponse
-import com.gitfit.android.data.remote.response.UserResponse
+import com.gitfit.android.data.remote.request.*
+import com.gitfit.android.data.remote.response.*
 import retrofit2.http.*
 
 interface GitFitApiService {
@@ -44,6 +37,13 @@ interface GitFitApiService {
         @Path("username") username: String,
         @Header("Authorization") authorizationHeader: String
     ): List<ActivityResponse>
+
+    @POST("/users/{username}/activities")
+    suspend fun saveUserActivity(
+        @Path("username") username: String,
+        @Header("Authorization") authorizationHeader: String,
+        @Body postActivityRequest: PostActivityRequest
+    ): PostActivityResponse
 
     @PATCH("/users/{username}/activities/{activityId}")
     suspend fun patchUserActivity(

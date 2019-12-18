@@ -18,7 +18,11 @@
         android:id="@+id/navigation_add_activity"
         android:name="com.gitfit.android.ui.home.home.addActivity.AddActivityDialogFragment"
         tools:layout="@layout/fragment_dialog_add_activity"
-        android:label="AddActivityDialogFragment" />
+        android:label="AddActivityDialogFragment" >
+        <action
+            android:id="@+id/action_navigation_add_activity_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </dialog>
     <fragment
         android:id="@+id/navigation_journal"
         android:name="com.gitfit.android.ui.home.journal.JournalFragment"

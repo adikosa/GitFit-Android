@@ -1,29 +1,41 @@
 package com.gitfit.android.ui.home.home.addActivity
 
 import androidx.lifecycle.MutableLiveData
+import com.gitfit.android.data.local.db.entity.Activity
+import com.gitfit.android.data.local.prefs.PreferenceProvider
+import com.gitfit.android.data.remote.request.PostActivityRequest
+import com.gitfit.android.repos.ActivityRepository
+import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.base.BaseViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
 
-class AddActivityViewModel : BaseViewModel<AddActivityDialogNavigator>() {
+class AddActivityViewModel(
+    private val gitFitAPIRepository: GitFitAPIRepository,
+    private val activityRepository: ActivityRepository,
+    private val preferenceProvider: PreferenceProvider
+) : BaseViewModel<AddActivityDialogNavigator>() {
 
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
     val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
 
-    var activityType = MutableLiveData<String>()
-    var dateTime = MutableLiveData<LocalDateTime>(LocalDateTime.now())
-    var value = MutableLiveData<Int>(0)
+    val activityType = MutableLiveData<String>()
+    val dateTime = MutableLiveData<LocalDateTime>(LocalDateTime.now())
+    val value = MutableLiveData(0)
 
-    fun onDateLayoutClick(hasFocus: Boolean) {
+    fun onDateEditTextClick(hasFocus: Boolean) {
         if (hasFocus) {
             navigator()?.showDatePicker()
         }
     }
 
-    fun onTimeLayoutClick(hasFocus: Boolean) {
+    fun onTimeEditTextClick(hasFocus: Boolean) {
         if (hasFocus) {
             navigator()?.showTimePicker()
         }
@@ -41,10 +53,27 @@ class AddActivityViewModel : BaseViewModel<AddActivityDialogNavigator>() {
     }
 
     fun onCancelButtonClick() {
-        navigator()?.closeDialog()
+        navigator()?.dismissDialog()
     }
 
     fun onSaveButtonClick() {
-        //TODO implement
+        saveActivity()
+        navigator()?.closeDialog()
     }
+
+    private fun saveActivity() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val user = preferenceProvider.getUser()
+            val activity = Activity(
+                0, user.username, activityType.value!!,
+                dateTime.value!!, value.value!!, value.value!!
+            )
+
+            gitFitAPIRepository.saveUserActivity(user.username, user.token,
+                PostActivityRequest.fromActivity(activity))
+            activityRepository.insert(activity)
+        }
+    }
+
+
 }

@@ -9,6 +9,10 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
+import com.gitfit.android.AppConstants.Companion.ACTIVITY_COFFEE
+import com.gitfit.android.AppConstants.Companion.ACTIVITY_GAME_CONSOLE_BREAK
+import com.gitfit.android.AppConstants.Companion.ACTIVITY_TABLE_TENNIS
 import com.gitfit.android.R
 import com.gitfit.android.databinding.FragmentDialogAddActivityBinding
 import kotlinx.android.synthetic.main.fragment_dialog_add_activity.*
@@ -38,35 +42,54 @@ class AddActivityDialogFragment : DialogFragment(), AddActivityDialogNavigator {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setActivityTypesDropDown()
+        setListeners()
+    }
+
+    private fun setActivityTypesDropDown() {
         val activityTypes = arrayOf(
             resources.getString(R.string.activity_drinking_coffee),
             resources.getString(R.string.activity_table_tennis),
             resources.getString(R.string.activity_console_game)
-        )
+        ).sortedArray()
 
         val adapter =
-                ArrayAdapter(
-                    context!!,
-                    R.layout.dropdown_menu_popup_item,
-                    activityTypes
-                )
+            ArrayAdapter(
+                context!!,
+                R.layout.dropdown_menu_popup_item,
+                activityTypes
+            )
 
-        filled_exposed_dropdown.setAdapter(adapter)
-
-        setListeners()
+        mActivityTypeDropDown.setAdapter(adapter)
     }
 
     private fun setListeners() {
-        date_edit_text.setOnFocusChangeListener { _, hasFocus ->
-            addActivityViewModel.onDateLayoutClick(hasFocus)
+        mActivityTypeDropDown.setOnItemClickListener { adapterView, _, position, _ ->
+            val item = adapterView.getItemAtPosition(position) as String
+
+            addActivityViewModel.activityType.postValue(when(item) {
+                resources.getString(R.string.activity_drinking_coffee) -> ACTIVITY_COFFEE
+                resources.getString(R.string.activity_table_tennis) -> ACTIVITY_TABLE_TENNIS
+                resources.getString(R.string.activity_console_game) -> ACTIVITY_GAME_CONSOLE_BREAK
+                else -> throw Exception("Unknown activity selected!")
+            })
         }
 
-        time_edit_text.setOnFocusChangeListener { _, hasFocus ->
-            addActivityViewModel.onTimeLayoutClick(hasFocus)
+        mDateEditText.setOnFocusChangeListener { _, hasFocus ->
+            addActivityViewModel.onDateEditTextClick(hasFocus)
+        }
+
+        mTimeEditText.setOnFocusChangeListener { _, hasFocus ->
+            addActivityViewModel.onTimeEditTextClick(hasFocus)
         }
     }
 
     override fun closeDialog() {
+        dismissDialog()
+        findNavController().navigate(R.id.action_navigation_add_activity_to_navigation_home)
+    }
+
+    override fun dismissDialog() {
         dismiss()
     }
 

@@ -37,7 +37,7 @@ val appModule = module {
     viewModel { RegisterViewModel(get(), get()) }
 
     viewModel { HomeViewModel(get(), get(), get()) }
-    viewModel { AddActivityViewModel() }
+    viewModel { AddActivityViewModel(get(), get(), get()) }
 
     viewModel { JournalViewModel(get(), get(), get(), get()) }
     viewModel { (activityId: Long) -> EditActivityViewModel(activityId, get(), get(), get()) }

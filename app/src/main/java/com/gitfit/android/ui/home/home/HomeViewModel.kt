@@ -42,11 +42,11 @@ class HomeViewModel(
 
             val totalLinesOfCode = activities
                 .filter { it.type == AppConstants.ACTIVITY_CODE_ADDITION }
-                .sumBy { it.points }
+                .sumBy { it.points }.or(0)
 
             val totalCupsOfCoffee = activities
                 .filter { it.type == AppConstants.ACTIVITY_COFFEE }
-                .sumBy { it.points }
+                .sumBy { it.points }.or(0)
 
             val currentProgress = ((totalLinesOfCode / user.linesOfCodeGoal.toDouble()) +
                     (totalCupsOfCoffee / user.cupsOfCoffeeGoal.toDouble())) * 50
