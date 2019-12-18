@@ -15,14 +15,12 @@ import androidx.navigation.ui.setupWithNavController
 import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.R
 import com.gitfit.android.data.remote.ResultWrapper
+import com.gitfit.android.data.remote.ResultWrapper.NetworkConnectivityError
 import com.gitfit.android.data.remote.ResultWrapper.Success
 import com.gitfit.android.databinding.ActivityMainBinding
 import com.gitfit.android.repos.GitFitAPIRepository
 import com.gitfit.android.ui.login.LoginFragment
-import com.gitfit.android.utils.debug
-import com.gitfit.android.utils.isNetworkConnected
-import com.gitfit.android.utils.navigateWithoutComingBack
-import com.gitfit.android.utils.showToast
+import com.gitfit.android.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.inject
@@ -47,12 +45,7 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment)
         setupBottomNavView()
 
-        if (isNetworkConnected()) {
-            checkUser()
-        } else {
-            showToast("No internet connection")
-            // TODO change later
-        }
+        checkUser()
     }
 
     private fun setupBottomNavView() {
@@ -70,16 +63,18 @@ class MainActivity : AppCompatActivity() {
         if (preferences.userExists()) {
             val user = preferences.getUser()
 
-            println("DUPA1")
-
             CoroutineScope(Dispatchers.IO).launch {
-                println("DUPA2")
-                if (gitFitAPIRepository.isTokenValid(user.username, user.token) is Success) {
-                    println("DUPA3")
-                    preferences.removeUser()
+                when (val response = gitFitAPIRepository.isTokenValid(user.username, user.token)) {
+                    is Success -> {
+                        val isTokenValid = response.value
+                        if (!isTokenValid) {
+                            preferences.removeUser()
+                        }
+                    }
+                    is NetworkConnectivityError -> showToastOnUIThread("No internet connection")
+                    else -> preferences.removeUser()
                 }
 
-                println("DUPA4")
                 withContext(Dispatchers.Main) {
                     navigateToHome()
                 }

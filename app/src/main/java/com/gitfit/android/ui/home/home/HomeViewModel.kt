@@ -18,13 +18,13 @@ class HomeViewModel(
     private val preferenceProvider: PreferenceProvider
 ) : BaseViewModel<HomeNavigator>() {
 
-    private var job: Job
+    private lateinit var job: Job
     var user: User = preferenceProvider.getUser()
     var linesOfCode = MutableLiveData(0)
     var cupsOfCoffee = MutableLiveData(0)
     var progress = MutableLiveData(0)
 
-    init {
+    fun init() {
         if (!preferenceProvider.userExists()) {
             signOut()
         }

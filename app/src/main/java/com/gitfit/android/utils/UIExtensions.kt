@@ -7,6 +7,8 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 fun NavController.navigateWithoutComingBack(@IdRes resIdDestination: Int) {
     val navOptions = NavOptions.Builder()
@@ -18,6 +20,13 @@ fun NavController.navigateWithoutComingBack(@IdRes resIdDestination: Int) {
 
 fun Context.showToast(text: String) {
     Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+}
+
+suspend fun Context.showToastOnUIThread(text: String) {
+    val context = this
+    withContext(Dispatchers.Main) {
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show()
+    }
 }
 
 fun Context.showToast(@StringRes resId: Int) {

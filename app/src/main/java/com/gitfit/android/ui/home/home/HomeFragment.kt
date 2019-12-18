@@ -45,6 +45,7 @@ class HomeFragment : BaseFragment(), HomeNavigator {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        homeViewModel.init()
         homeViewModel.progress.observe(this, Observer {
             val animator = ObjectAnimator.ofInt(mArcProgress, "progress", 0, it)
             animator.apply {
