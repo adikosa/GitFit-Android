@@ -5,7 +5,7 @@ import com.gitfit.android.data.local.db.entity.Activity
 
 class ActivityRepository(private val activityDao: ActivityDao) {
 
-    suspend fun get(id: Long) = activityDao.get(id)
+    suspend fun getById(id: Long) = activityDao.getById(id)
 
     suspend fun deleteAll() = activityDao.deleteAll()
 

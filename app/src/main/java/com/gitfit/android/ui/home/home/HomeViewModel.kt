@@ -36,11 +36,11 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun loadProgress() = withContext(Dispatchers.IO) {
+    private suspend fun loadProgress() {
         when(val response = gitFitAPIRepository.getActivities(user.username, user.token)) {
-            is ResultWrapper.NetworkConnectivityError -> println('A')
-            is ResultWrapper.GenericError -> println('B')
-            is ResultWrapper.NetworkError -> println('C')
+            is ResultWrapper.NetworkConnectivityError -> withContext(Dispatchers.Main) {
+                navigator()?.showToast("No network connection.")
+            }
             is ResultWrapper.Success -> {
                 val activitiesResponse = response.value
                 val activities = Activity.fromActivitiesResponse(activitiesResponse)
@@ -62,6 +62,9 @@ class HomeViewModel(
 
                 activityRepository.deleteAll()
                 activityRepository.insertList(activities)
+            }
+            else -> withContext(Dispatchers.Main) {
+                navigator()?.showToast("Server connection error.")
             }
         }
     }

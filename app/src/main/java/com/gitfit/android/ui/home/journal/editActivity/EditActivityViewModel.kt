@@ -29,7 +29,7 @@ class EditActivityViewModel(
 
     private val currentUser by lazy { preferenceProvider.getUser() }
 
-    var activity = runBlocking(Dispatchers.IO) { activityRepository.get(activityId) }
+    var activity = runBlocking(Dispatchers.IO) { activityRepository.getById(activityId) }
 
     val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
     val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)

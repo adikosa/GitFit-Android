@@ -2,6 +2,7 @@ package com.gitfit.android.ui.home.home
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.gitfit.android.R
 import com.gitfit.android.databinding.FragmentHomeBinding
 import com.gitfit.android.ui.base.BaseFragment
 import com.gitfit.android.utils.navigateWithoutComingBack
+import com.gitfit.android.utils.showToast
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

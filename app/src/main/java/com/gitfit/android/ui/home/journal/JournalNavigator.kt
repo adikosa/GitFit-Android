@@ -1,4 +1,6 @@
 package com.gitfit.android.ui.home.journal
 
-interface JournalNavigator {
+import com.gitfit.android.ui.base.BaseNavigator
+
+interface JournalNavigator : BaseNavigator {
 }

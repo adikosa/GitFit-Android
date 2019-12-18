@@ -76,16 +76,9 @@ class GitFitAPIRepository(
         }
     }
 
-    suspend fun getActivityTypes(): List<ActivityType>? {
-        return try {
+    suspend fun getActivityTypes(): ResultWrapper<List<ActivityType>> {
+        return safeApiCall(dispatcher) {
             gitFitApiService.getActivityTypes()
-        } catch (httpException: HttpException) {
-            val responseCode = httpException.code()
-            if (responseCode == 404) {
-                null
-            } else {
-                throw httpException
-            }
         }
     }
 
