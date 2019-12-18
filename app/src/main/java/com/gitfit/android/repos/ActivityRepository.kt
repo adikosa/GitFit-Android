@@ -17,5 +17,7 @@ class ActivityRepository(private val activityDao: ActivityDao) {
 
     fun getLiveData() = activityDao.getLiveData()
 
+    suspend fun getAll() = activityDao.getAll()
+
 
 }

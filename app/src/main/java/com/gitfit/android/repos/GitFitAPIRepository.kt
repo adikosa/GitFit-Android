@@ -27,12 +27,16 @@ class GitFitAPIRepository(
             try {
                 ResultWrapper.Success(apiCall.invoke())
             } catch (throwable: Throwable) {
+                throwable.printStackTrace()
+
                 when (throwable) {
                     is NoConnectivityException -> ResultWrapper.NetworkConnectivityError
                     is HttpException -> ResultWrapper.GenericError(throwable.code())
                     is IOException -> ResultWrapper.NetworkError
                     else -> ResultWrapper.GenericError(null)
                 }
+
+
             }
         }
     }

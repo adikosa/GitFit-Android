@@ -30,6 +30,7 @@ class HomeViewModel(
         }
 
         job = viewModelScope.launch {
+            countProgress()
             setLoading(true)
             loadProgress()
             setLoading(false)
@@ -45,21 +46,6 @@ class HomeViewModel(
                 val activitiesResponse = response.value
                 val activities = Activity.fromActivitiesResponse(activitiesResponse)
 
-                val totalLinesOfCode = activities
-                    .filter { it.type == AppConstants.ACTIVITY_CODE_ADDITION }
-                    .sumBy { it.points }.or(0)
-
-                val totalCupsOfCoffee = activities
-                    .filter { it.type == AppConstants.ACTIVITY_COFFEE }
-                    .sumBy { it.points }.or(0)
-
-                val currentProgress = ((totalLinesOfCode / user.linesOfCodeGoal.toDouble()) +
-                        (totalCupsOfCoffee / user.cupsOfCoffeeGoal.toDouble())) * 50
-
-                progress.postValue(currentProgress.toInt())
-                linesOfCode.postValue(totalLinesOfCode)
-                cupsOfCoffee.postValue(totalCupsOfCoffee)
-
                 activityRepository.deleteAll()
                 activityRepository.insertList(activities)
             }
@@ -67,6 +53,35 @@ class HomeViewModel(
                 navigator()?.showToast("Server connection error.")
             }
         }
+
+        countProgress()
+    }
+
+    suspend fun countProgress() {
+        val activities = activityRepository.getAll()
+        val totalLinesOfCode = activities
+            .filter { it.type == AppConstants.ACTIVITY_CODE_ADDITION }
+            .sumBy { it.points }.or(0)
+
+        val totalCupsOfCoffee = activities
+            .filter { it.type == AppConstants.ACTIVITY_COFFEE }
+            .sumBy { it.points }.or(0)
+
+        var linesOfCodeProgress = totalLinesOfCode / user.linesOfCodeGoal.toDouble()
+        if (linesOfCodeProgress > 1.0) {
+            linesOfCodeProgress = 1.0
+        }
+
+        var cupsOfCoffeeProgress = totalCupsOfCoffee / user.cupsOfCoffeeGoal.toDouble()
+        if (cupsOfCoffeeProgress > 1.0) {
+            cupsOfCoffeeProgress = 1.0
+        }
+
+        val currentProgress = (linesOfCodeProgress + cupsOfCoffeeProgress) * 50
+
+        progress.postValue(currentProgress.toInt())
+        linesOfCode.postValue(totalLinesOfCode)
+        cupsOfCoffee.postValue(totalCupsOfCoffee)
     }
 
     fun stopLoading() {

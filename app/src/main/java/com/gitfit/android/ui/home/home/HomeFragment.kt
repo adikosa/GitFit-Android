@@ -48,13 +48,24 @@ class HomeFragment : BaseFragment(), HomeNavigator {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         homeViewModel.init()
+
         homeViewModel.progress.observe(this, Observer {
-            val animator = ObjectAnimator.ofInt(mArcProgress, "progress", 0, it)
-            animator.apply {
-                interpolator = DecelerateInterpolator()
-                target = mArcProgress
-                duration = 500
-            }.start()
+            println("curr")
+            println(mArcProgress.progress)
+
+            println("a")
+            println(it)
+
+            if (mArcProgress.progress != it) {
+                val animator = ObjectAnimator.ofInt(mArcProgress, "progress", mArcProgress.progress, it)
+                animator.apply {
+                    interpolator = DecelerateInterpolator()
+                    target = mArcProgress
+                    duration = 500
+                }.start()
+
+                mArcProgress.progress = it
+            }
         })
     }
 

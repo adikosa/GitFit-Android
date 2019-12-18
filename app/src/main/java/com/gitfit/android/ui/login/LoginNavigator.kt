@@ -1,6 +1,8 @@
 package com.gitfit.android.ui.login
 
-interface LoginNavigator {
+import com.gitfit.android.ui.base.BaseNavigator
+
+interface LoginNavigator : BaseNavigator {
     fun openCustomTabsIntent()
     fun navigateToHomeFragment()
     fun navigateToRegisterFragment()

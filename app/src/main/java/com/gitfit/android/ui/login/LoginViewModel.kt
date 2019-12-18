@@ -1,5 +1,6 @@
 package com.gitfit.android.ui.login
 
+import androidx.lifecycle.viewModelScope
 import com.gitfit.android.data.local.prefs.PreferenceProvider
 import com.gitfit.android.data.remote.response.GithubTokenResponse
 import com.gitfit.android.data.local.prefs.User
@@ -27,42 +28,49 @@ class LoginViewModel(
         navigator()!!.openCustomTabsIntent()
     }
 
-    fun handleGithubCode(code: String) {
+    fun handleGithubCode(code: String) = viewModelScope.launch {
         setLoading(true)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            when (val response = gitFitAPIRepository.getGithubToken(code)) {
-                is NetworkConnectivityError -> println('A')
-                is GenericError -> println('B')
-                is NetworkError -> println('C')
-                is Success -> githubTokenResponse = response.value
+        when (val response = gitFitAPIRepository.getGithubToken(code)) {
+            is NetworkConnectivityError -> withContext(Dispatchers.Main) {
+                navigator()?.showToast("No internet connection.")
+            }
+            is GenericError -> println("code = $code")
+            is Success -> {
+                githubTokenResponse = response.value
+                authorizeUser()
+            }
+            else -> withContext(Dispatchers.Main) {
+                navigator()?.showToast("Server connection error.")
+            }
+        }
+    }
+
+    private suspend fun authorizeUser() {
+        val userResponse =
+            gitFitAPIRepository.getUser(githubTokenResponse!!.username)
+
+        val userAuthResponse: UserAuthResponse
+
+        if (userResponse == null) {
+            withContext(Dispatchers.Main) {
+                navigator()!!.navigateToRegisterFragment()
+                setLoading(false)
             }
 
-            val userResponse =
-                gitFitAPIRepository.getUser(githubTokenResponse!!.username)
-
-            val userAuthResponse: UserAuthResponse
-
-            if (userResponse == null) {
-                withContext(Dispatchers.Main) {
-                    navigator()!!.navigateToRegisterFragment()
-                    setLoading(false)
-                }
-
-            } else {
-                userAuthResponse = gitFitAPIRepository.logInUser(
-                    UserLoginRequest(
-                        githubTokenResponse!!.username,
-                        githubTokenResponse!!.githubToken
-                    )
+        } else {
+            userAuthResponse = gitFitAPIRepository.logInUser(
+                UserLoginRequest(
+                    githubTokenResponse!!.username,
+                    githubTokenResponse!!.githubToken
                 )
+            )
 
-                preferences.saveUser(User.fromAuthResponse(userAuthResponse))
+            preferences.saveUser(User.fromAuthResponse(userAuthResponse))
 
-                withContext(Dispatchers.Main) {
-                    navigator()!!.navigateToHomeFragment()
-                    setLoading(false)
-                }
+            withContext(Dispatchers.Main) {
+                navigator()!!.navigateToHomeFragment()
+                setLoading(false)
             }
         }
     }
